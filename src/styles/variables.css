@@ -1,0 +1,18 @@
+/* src/styles/variables.css — design tokens for all phases */
+:root {
+  --color-bg-primary: #0f172a;      /* slate-900 — session screen background */
+  --color-bg-secondary: #1e293b;    /* slate-800 — setup screen background */
+  --color-text-primary: #e2e8f0;    /* slate-200 — main text */
+  --color-text-muted: #94a3b8;      /* slate-400 — secondary/helper text */
+  --color-accent: #7dd3fc;          /* sky-300 — preset button active, start button */
+  --color-accent-dim: #0ea5e9;      /* sky-500 — hover states */
+  --color-surface: #334155;         /* slate-700 — input background, card surface */
+  --color-border: #475569;          /* slate-600 — input borders, dividers */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

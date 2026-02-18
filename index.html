@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meditation Timer</title>
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <link rel="stylesheet" href="/src/styles/variables.css" />
+  </head>
+  <body style="margin:0; background: var(--color-bg-secondary); color: var(--color-text-primary); font-family: system-ui, sans-serif;">
+
+    <!-- Setup Screen -->
+    <div id="setup-screen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 2rem;">
+      <h1 style="color: var(--color-text-primary); font-size: 1.5rem; font-weight: 300; letter-spacing: 0.1em;">Meditation Timer</h1>
+
+      <!-- Preset duration buttons -->
+      <div style="display: flex; gap: 0.75rem;">
+        <button data-preset="5" style="padding: 0.5rem 1.25rem; background: var(--color-surface); color: var(--color-text-primary); border: 1px solid var(--color-border); border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem;">5 min</button>
+        <button data-preset="10" style="padding: 0.5rem 1.25rem; background: var(--color-surface); color: var(--color-text-primary); border: 1px solid var(--color-border); border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem;">10 min</button>
+        <button data-preset="15" style="padding: 0.5rem 1.25rem; background: var(--color-surface); color: var(--color-text-primary); border: 1px solid var(--color-border); border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem;">15 min</button>
+        <button data-preset="20" style="padding: 0.5rem 1.25rem; background: var(--color-surface); color: var(--color-text-primary); border: 1px solid var(--color-border); border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem;">20 min</button>
+      </div>
+
+      <!-- Custom duration input -->
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+        <input
+          id="duration-input"
+          type="number"
+          min="1"
+          max="180"
+          value="10"
+          style="width: 6rem; padding: 0.5rem 0.75rem; background: var(--color-surface); color: var(--color-text-primary); border: 1px solid var(--color-border); border-radius: 0.375rem; font-size: 1.25rem; text-align: center;"
+        />
+        <span style="color: var(--color-text-muted); font-size: 0.8rem;">minutes (1&#x2013;180)</span>
+      </div>
+
+      <!-- Start button -->
+      <button
+        id="start-button"
+        style="padding: 0.75rem 2.5rem; background: var(--color-accent); color: #0f172a; border: none; border-radius: 0.375rem; cursor: pointer; font-size: 1rem; letter-spacing: 0.05em;"
+      >Begin</button>
+
+      <!-- Validation error (hidden by default) -->
+      <p id="duration-error" style="display: none; color: #f87171; font-size: 0.8rem;">Enter 1&#x2013;180 minutes</p>
+    </div>
+
+    <!-- Session Screen (hidden until session starts) -->
+    <div id="session-screen" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 2rem; background: var(--color-bg-primary);">
+      <span id="timer-display" style="font-size: 5rem; font-weight: 200; color: var(--color-text-primary); letter-spacing: 0.05em; font-variant-numeric: tabular-nums;">10:00</span>
+      <button
+        id="stop-button"
+        style="padding: 0.5rem 1.5rem; background: transparent; color: var(--color-text-muted); border: 1px solid var(--color-border); border-radius: 0.375rem; cursor: pointer; font-size: 0.85rem;"
+      >End Session</button>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
