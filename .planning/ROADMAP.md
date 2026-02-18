@@ -12,7 +12,7 @@ This roadmap delivers a browser-based meditation timer through seven phases that
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Timer Core** - Project scaffold, duration input, session start, and countdown display
+- [x] **Phase 1: Timer Core** - Project scaffold, duration input, session start, and countdown display (completed 2026-02-18)
 - [ ] **Phase 2: Session Controls and Platform Resilience** - Pause/resume, stop early, screen wake lock, and responsive mobile layout
 - [ ] **Phase 3: Session Audio Foundation** - End-of-session chime via Web Audio API with lazy AudioContext
 - [ ] **Phase 4: Animated Nature Scenes** - Scene selection UI and Canvas-rendered animated backgrounds
@@ -134,7 +134,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Timer Core | 1/3 | In Progress|  |
+| 1. Timer Core | 3/3 | Complete   | 2026-02-18 |
 | 2. Session Controls and Platform Resilience | 0/2 | Not started | - |
 | 3. Session Audio Foundation | 0/1 | Not started | - |
 | 4. Animated Nature Scenes | 0/3 | Not started | - |
