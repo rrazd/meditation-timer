@@ -49,11 +49,11 @@ Plans:
   3. Device screen does not dim or lock during an active session (Screen Wake Lock active)
   4. Wake lock is re-acquired when the user returns to the tab after switching away
   5. App is fully usable on mobile browsers with appropriate touch targets and viewport handling
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
+- [ ] 02-01-PLAN.md — Pause/resume controls: state extension, pause button HTML, session-screen.ts toggle, main.ts bus wiring
+- [ ] 02-02-PLAN.md — Wake lock lifecycle (wake-lock.ts + main.ts), mobile viewport (100dvh, safe-area, touch targets)
 
 ### Phase 3: Session Audio Foundation
 **Goal**: User hears a gentle chime when the session ends, establishing the Web Audio API architecture for all future audio work
@@ -134,7 +134,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Timer Core | 3/3 | Complete   | 2026-02-18 |
+| 1. Timer Core | 3/3 | Complete    | 2026-02-18 |
 | 2. Session Controls and Platform Resilience | 0/2 | Not started | - |
 | 3. Session Audio Foundation | 0/1 | Not started | - |
 | 4. Animated Nature Scenes | 0/3 | Not started | - |
