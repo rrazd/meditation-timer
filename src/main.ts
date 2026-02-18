@@ -1,17 +1,35 @@
+// src/main.ts
 import './styles/main.css';
 import './styles/variables.css';
+
 import { bus } from './event-bus.js';
 import { state } from './state.js';
-import { formatTime } from './utils/format.js';
 import { Timer } from './timer.js';
+import { initSetupScreen } from './ui/setup-screen.js';
+import { initSessionScreen } from './ui/session-screen.js';
+import { transitionToSession, transitionToSetup } from './ui/transitions.js';
 
-// Smoke test — remove before Plan 03 wiring
-console.log('bus:', bus);
-console.log('state:', state);
-console.log('formatTime(600000):', formatTime(600000)); // expected: "10:00"
-console.log('formatTime(37000):', formatTime(37000));   // expected: "00:37"
-console.log('formatTime(1):', formatTime(1));           // expected: "00:01"
+const timer = new Timer();
 
-// Smoke test for timer module — instantiate only, do not start
-void new Timer();
-console.log('Timer instantiated OK — worker loaded');
+// Wire setup screen — the callback runs inside the Start button click handler (user gesture)
+initSetupScreen((durationMs: number) => {
+  state.sessionDurationMs = durationMs;
+  state.sessionActive = true;
+
+  timer.start(durationMs);
+  transitionToSession();
+});
+
+// Wire session screen — stop button handler
+initSessionScreen(() => {
+  state.sessionActive = false;
+  timer.stop();
+  transitionToSetup();
+});
+
+// Session complete — timer reached zero
+bus.on('session:complete', () => {
+  state.sessionActive = false;
+  // Phase 3 will call playChime() here
+  transitionToSetup();
+});
