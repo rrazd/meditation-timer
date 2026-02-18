@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-17)
 ## Current Position
 
 Phase: 1 of 7 (Timer Core)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In progress
-Last activity: 2026-02-18 — Completed 01-01 (project scaffold + foundation modules)
+Last activity: 2026-02-18 — Completed 01-02 (Web Worker timer engine)
 
-Progress: [#░░░░░░░░░] 5%
+Progress: [##░░░░░░░░] 10%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 4 min
-- Total execution time: 0.07 hours
+- Total plans completed: 2
+- Average duration: 3 min
+- Total execution time: 0.10 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-timer-core | 1/3 | 4 min | 4 min |
+| 01-timer-core | 2/3 | 6 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 4 min
-- Trend: Baseline established
+- Last 5 plans: 4 min, 2 min
+- Trend: Fast — foundation plans executing quickly
 
 *Updated after each plan completion*
 
@@ -51,6 +51,8 @@ Recent decisions affecting current work:
 - [01-01]: Math.ceil in formatTime prevents premature 00:00 display (37000ms shows 00:37 not 00:36)
 - [01-01]: volta install node@22 required (create-vite@8 needs node ^20.19.0 or >=22.12.0)
 - [01-01]: CSS custom properties in variables.css as design tokens (not Tailwind theme config)
+- [01-02]: void new Timer() instead of const _timer = new Timer() — TypeScript 5.9 noUnusedLocals does not suppress _-prefixed local variables (only parameters)
+- [01-02]: No exports in timer-worker.ts — worker entry point; moduleDetection:force in tsconfig handles TS module classification without explicit exports
 
 ### Pending Todos
 
@@ -63,5 +65,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Completed 01-01-PLAN.md (project scaffold + foundation modules)
+Stopped at: Completed 01-02-PLAN.md (Web Worker timer engine)
 Resume file: None
