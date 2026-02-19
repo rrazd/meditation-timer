@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-17)
 
 **Core value:** A distraction-free, visually immersive meditation session that starts in seconds and gets out of the way.
-**Current focus:** Phase 2: Complete — Phase 3: Ambient Audio next
+**Current focus:** Phase 3: Session Audio Foundation — 03-01 complete (awaiting human verify checkpoint), Phase 3 in progress
 
 ## Current Position
 
-Phase: 2 of 7 (Session Controls and Platform Resilience) — Phase 2 complete
-Plan: 2 of 2 in current phase (02-01 and 02-02 complete)
-Status: Phase 2 complete — screen wake lock, 100dvh, safe-area insets, touch targets delivered; Phase 3 Ambient Audio next
-Last activity: 2026-02-19 — Completed 02-02 screen wake lock and mobile platform resilience (UX-05, UX-06)
+Phase: 3 of 7 (Session Audio Foundation) — in progress
+Plan: 1 of 1 in current phase (03-01 automated tasks complete; Task 4 human-verify checkpoint pending)
+Status: Phase 3 in progress — audio.ts created, main.ts wired; awaiting human verification of chime playback
+Last activity: 2026-02-19 — Completed 03-01 automated tasks (audio.ts + main.ts wiring, TIMER-06)
 
-Progress: [#####░░░░░] 42%
+Progress: [######░░░░] 46%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5 (Phase 1: 3 plans, Phase 2: 2 plans)
+- Total plans completed: 6 (Phase 1: 3 plans, Phase 2: 2 plans, Phase 3: 1 plan in progress)
 - Average duration: ~5 min (includes human verification wait)
-- Total execution time: 0.36 hours
+- Total execution time: 0.49 hours
 
 **By Phase:**
 
@@ -29,10 +29,11 @@ Progress: [#####░░░░░] 42%
 |-------|-------|-------|----------|
 | 01-timer-core | 3/3 (complete) | 17 min | ~6 min |
 | 02-session-controls-and-platform-resilience | 2/2 (complete) | 7 min | ~3.5 min |
+| 03-session-audio-foundation | 1/1 automated tasks done | 8 min | ~8 min |
 
 **Recent Trend:**
-- Last 5 plans: 2 min, 17 min (01-03 with human verify), 5 min (02-01), 2 min (02-02)
-- Trend: Fast — Phase 2 complete
+- Last 5 plans: 17 min (01-03 with human verify), 5 min (02-01), 2 min (02-02), 8 min (03-01)
+- Trend: Fast — Phase 3 audio foundation automated tasks complete
 
 *Updated after each plan completion*
 
@@ -67,6 +68,11 @@ Recent decisions affecting current work:
 - [02-02]: 100dvh used instead of 100vh — fixes iOS Safari overflow when address bar is visible
 - [02-02]: pointer:coarse used for touch target media query (not hover:none) — correctly covers hybrid devices
 - [02-02]: user-scalable=no deliberately omitted from viewport meta — violates WCAG SC 1.4.4 Resize Text
+- [03-01]: AudioContext created inside initAudio() called from Start button handler — satisfies Chrome 71+ autoplay policy (running state immediately)
+- [03-01]: Chime buffer pre-loaded in initAudio() not in playChime() — avoids race on very short test sessions
+- [03-01]: AudioBufferSourceNode is local to each playChime() call (single-use); only chimeBuffer stored at module scope (reusable AudioBuffer)
+- [03-01]: Non-fatal chime failure: fetch/decode errors caught, playChime() resolves immediately so transitionToSetup() still runs
+- [03-01]: playChime() called only in session:complete handler (natural expiry) — no chime on manual stop
 
 ### Pending Todos
 
@@ -79,5 +85,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 02-02-PLAN.md — Phase 2 complete (screen wake lock, mobile layout, UX-05 and UX-06)
+Stopped at: Completed 03-01 automated tasks — at Task 4 human-verify checkpoint (chime playback in browser)
 Resume file: None

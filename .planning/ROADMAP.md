@@ -13,8 +13,8 @@ This roadmap delivers a browser-based meditation timer through seven phases that
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Timer Core** - Project scaffold, duration input, session start, and countdown display (completed 2026-02-18)
-- [ ] **Phase 2: Session Controls and Platform Resilience** - Pause/resume, stop early, screen wake lock, and responsive mobile layout
-- [ ] **Phase 3: Session Audio Foundation** - End-of-session chime via Web Audio API with lazy AudioContext
+- [x] **Phase 2: Session Controls and Platform Resilience** - Pause/resume, stop early, screen wake lock, and responsive mobile layout (completed 2026-02-19)
+- [~] **Phase 3: Session Audio Foundation** - End-of-session chime via Web Audio API with lazy AudioContext (in progress — awaiting human verify)
 - [ ] **Phase 4: Animated Nature Scenes** - Scene selection UI and Canvas-rendered animated backgrounds
 - [ ] **Phase 5: Ambient Audio and Scene Pairing** - Gapless ambient sound loops paired to selected scenes
 - [ ] **Phase 6: Session Transitions** - Gentle fade-in and fade-out for animation and audio
@@ -67,7 +67,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 03-01-PLAN.md — Chime audio asset (public/audio/chime.mp3), src/audio.ts (initAudio + playChime), src/main.ts wiring + human verify
+- [x] 03-01-PLAN.md — Chime audio asset (public/audio/chime.mp3), src/audio.ts (initAudio + playChime), src/main.ts wiring + human verify
 
 ### Phase 4: Animated Nature Scenes
 **Goal**: User selects from curated nature environments and sees a procedurally animated Canvas scene during meditation
@@ -135,7 +135,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Timer Core | 3/3 | Complete    | 2026-02-18 |
-| 2. Session Controls and Platform Resilience | 0/2 | Not started | - |
+| 2. Session Controls and Platform Resilience | 0/2 | Complete    | 2026-02-19 |
 | 3. Session Audio Foundation | 0/1 | Not started | - |
 | 4. Animated Nature Scenes | 0/3 | Not started | - |
 | 5. Ambient Audio and Scene Pairing | 0/2 | Not started | - |

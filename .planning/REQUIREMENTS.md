@@ -12,7 +12,7 @@
 - [x] **TIMER-03**: User can pause a session when interrupted and resume it
 - [x] **TIMER-04**: User can stop a session early and return to the setup screen
 - [x] **TIMER-05**: User sees a subtle countdown display of remaining time during the session
-- [ ] **TIMER-06**: A gentle chime sounds when the timer reaches zero and the session ends
+- [x] **TIMER-06**: A gentle chime sounds when the timer reaches zero and the session ends
 
 ### Immersion
 
@@ -76,7 +76,7 @@
 | TIMER-03 | Phase 2 | Complete |
 | TIMER-04 | Phase 2 | Complete |
 | TIMER-05 | Phase 1 | Complete |
-| TIMER-06 | Phase 3 | Pending |
+| TIMER-06 | Phase 3 | Complete |
 | IMRS-01 | Phase 4 | Pending |
 | IMRS-02 | Phase 4 | Pending |
 | IMRS-03 | Phase 5 | Pending |
