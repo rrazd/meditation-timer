@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-17)
 
 **Core value:** A distraction-free, visually immersive meditation session that starts in seconds and gets out of the way.
-**Current focus:** Phase 4: Animated Nature Scenes — 04-02 complete, scene picker UI (04-03) remaining
+**Current focus:** Phase 4: Animated Nature Scenes — 04-03 Task 1 complete, awaiting human verification (Task 2 checkpoint)
 
 ## Current Position
 
 Phase: 4 of 7 (Animated Nature Scenes) — in progress
-Plan: 2 of 3 complete in Phase 4 (04-02 complete — RainScene, ForestScene, OceanScene implementations)
-Status: Phase 4 in progress — 04-01 and 04-02 complete, scene picker UI (04-03) remaining
-Last activity: 2026-02-19 — Completed 04-02 (RainScene, ForestScene, OceanScene with simplex-noise, prefers-reduced-motion)
+Plan: 3 of 3 in Phase 4 (04-03 Task 1 committed — awaiting human-verify checkpoint Task 2)
+Status: Phase 4 at checkpoint — scene selector UI built, human verification of full end-to-end flow pending
+Last activity: 2026-02-19 — Completed 04-03 Task 1 (scene selector buttons + wiring in index.html and setup-screen.ts)
 
-Progress: [#########░] 68%
+Progress: [#########░] 72%
 
 ## Performance Metrics
 
@@ -30,13 +30,14 @@ Progress: [#########░] 68%
 | 01-timer-core | 3/3 (complete) | 17 min | ~6 min |
 | 02-session-controls-and-platform-resilience | 2/2 (complete) | 7 min | ~3.5 min |
 | 03-session-audio-foundation | 1/1 (complete) | 8 min | ~8 min |
-| 04-animated-nature-scenes | 2/3 (in progress) | 6 min | ~3 min |
+| 04-animated-nature-scenes | 3/3 (at checkpoint) | 8 min | ~2.7 min |
 
 **Recent Trend:**
 - Last 5 plans: 2 min (02-02), 8 min (03-01), 2 min (04-01), 4 min (04-02)
 - Trend: Fast — Phase 4 scene implementations complete, scene picker UI (04-03) next
 
 *Updated after each plan completion*
+| Phase 04-animated-nature-scenes P03 | 2 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -82,6 +83,8 @@ Recent decisions affecting current work:
 - [04-02]: import type required for IScene/SceneOptions in scene files — verbatimModuleSyntax: true in tsconfig (plan snippet used plain import, auto-fixed)
 - [04-02]: Rain uses linear motion only; Forest motes use fixed base + noise displacement; Ocean waves spread across lower 70% with depth-based opacity
 - [04-02]: createNoise2D() called once in init(), stored as instance property — not called per frame (has initialisation cost)
+- [Phase 04-03]: Rain active state set in HTML markup matching JS default selectedScene='rain' — avoids redundant JS init call
+- [Phase 04-03]: SCENE_NAMES module constant drives both click registration and setActiveScene clear loop — single source of truth
 
 ### Pending Todos
 
@@ -94,5 +97,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 04-02-PLAN.md
+Stopped at: Checkpoint — 04-03 Task 2 human-verify (awaiting user verification of complete Phase 4 end-to-end)
 Resume file: None
