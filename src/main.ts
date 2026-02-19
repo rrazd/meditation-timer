@@ -9,6 +9,7 @@ import { initSetupScreen } from './ui/setup-screen.js';
 import { initSessionScreen } from './ui/session-screen.js';
 import { transitionToSession, transitionToSetup } from './ui/transitions.js';
 import { acquireWakeLock, releaseWakeLock } from './utils/wake-lock.js';
+import { initAudio, playChime } from './audio.js';
 
 const timer = new Timer();
 
@@ -17,6 +18,8 @@ initSetupScreen(async (durationMs: number) => {
   state.sessionDurationMs = durationMs;
   state.sessionActive = true;
   state.sessionPaused = false;
+
+  await initAudio(); // Must precede timer.start() — loads chime before session could complete
 
   timer.start(durationMs);
   await acquireWakeLock();
@@ -40,8 +43,8 @@ bus.on('session:complete', async () => {
   state.sessionPaused = false;
   await releaseWakeLock();
   resetSessionScreen();
-  // Phase 3 will call playChime() here
-  transitionToSetup();
+  await playChime();    // Wait for chime to finish — Promise resolves on 'ended' event
+  transitionToSetup();  // Screen transitions after chime, not simultaneously
 });
 
 bus.on('session:pause', () => {
