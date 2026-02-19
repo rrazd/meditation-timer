@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-17)
 
 ## Current Position
 
-Phase: 3 of 7 (Session Audio Foundation) — complete
-Plan: 1 of 1 complete in Phase 3 (03-01 fully complete, human verify approved)
-Status: Phase 3 complete — chime plays on natural timer expiry, human verified all four browser scenarios
-Last activity: 2026-02-19 — Completed 03-01 fully (audio.ts + main.ts wiring + human verify, TIMER-06)
+Phase: 4 of 7 (Animated Nature Scenes) — in progress
+Plan: 1 of 3 complete in Phase 4 (04-01 complete — scene infrastructure, canvas, SceneController)
+Status: Phase 4 in progress — 04-01 complete, scene implementations (04-02) and scene picker UI (04-03) remaining
+Last activity: 2026-02-19 — Completed 04-01 (simplex-noise, IScene interface, SceneController, canvas wiring, IMRS-01 + IMRS-02)
 
-Progress: [#######░░░] 54%
+Progress: [########░░] 62%
 
 ## Performance Metrics
 
@@ -30,10 +30,11 @@ Progress: [#######░░░] 54%
 | 01-timer-core | 3/3 (complete) | 17 min | ~6 min |
 | 02-session-controls-and-platform-resilience | 2/2 (complete) | 7 min | ~3.5 min |
 | 03-session-audio-foundation | 1/1 (complete) | 8 min | ~8 min |
+| 04-animated-nature-scenes | 1/3 (in progress) | 2 min | ~2 min |
 
 **Recent Trend:**
-- Last 5 plans: 17 min (01-03 with human verify), 5 min (02-01), 2 min (02-02), 8 min (03-01)
-- Trend: Fast — Phase 3 audio foundation complete, Phase 4 next
+- Last 5 plans: 5 min (02-01), 2 min (02-02), 8 min (03-01), 2 min (04-01)
+- Trend: Fast — Phase 4 scene infrastructure complete, scene implementations (04-02) next
 
 *Updated after each plan completion*
 
@@ -73,6 +74,10 @@ Recent decisions affecting current work:
 - [03-01]: AudioBufferSourceNode is local to each playChime() call (single-use); only chimeBuffer stored at module scope (reusable AudioBuffer)
 - [03-01]: Non-fatal chime failure: fetch/decode errors caught, playChime() resolves immediately so transitionToSetup() still runs
 - [03-01]: playChime() called only in session:complete handler (natural expiry) — no chime on manual stop
+- [04-01]: import type used for all type-only imports — verbatimModuleSyntax: true in tsconfig requires this (consistent with Phase 1-3 pattern)
+- [04-01]: SceneController rAF loop uses 30fps cap (FRAME_INTERVAL_MS = 1000/30) — lastFrameTime only updated on rendered frames, not every tick
+- [04-01]: reducedMotion checked once at SceneController init — canvas drawing is pure JS, browser cannot suppress it automatically
+- [04-01]: DPR-aware canvas sizing: canvas.width = Math.floor(w * dpr), CSS width set separately — scenes must re-apply ctx.scale(dpr,dpr) inside resize()
 - [03-01]: Phase 2 wiring preserved in main.ts (wake lock, pause/resume, resetSessionScreen, visibilitychange) — plan template was simplified; actual code kept full Phase 2 additions
 
 ### Pending Todos
@@ -86,5 +91,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 03-01 fully — Phase 3 complete (TIMER-06 satisfied, human verify approved)
+Stopped at: Completed 04-01 — Phase 4 plan 1 of 3 complete (IMRS-01 + IMRS-02 satisfied)
 Resume file: None

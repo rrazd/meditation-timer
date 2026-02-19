@@ -16,8 +16,8 @@
 
 ### Immersion
 
-- [ ] **IMRS-01**: User can select from 2-3 animated nature scene environments (e.g. rain, forest, ocean) before starting
-- [ ] **IMRS-02**: The selected nature scene plays as an animated full-screen background during the session
+- [x] **IMRS-01**: User can select from 2-3 animated nature scene environments (e.g. rain, forest, ocean) before starting
+- [x] **IMRS-02**: The selected nature scene plays as an animated full-screen background during the session
 - [ ] **IMRS-03**: Ambient background sound matching the selected scene plays during the session (gapless loop)
 - [ ] **IMRS-04**: Scene and ambient sound are paired — selecting a scene automatically selects the matching audio
 
@@ -77,8 +77,8 @@
 | TIMER-04 | Phase 2 | Complete |
 | TIMER-05 | Phase 1 | Complete |
 | TIMER-06 | Phase 3 | Complete |
-| IMRS-01 | Phase 4 | Pending |
-| IMRS-02 | Phase 4 | Pending |
+| IMRS-01 | Phase 4 | Complete |
+| IMRS-02 | Phase 4 | Complete |
 | IMRS-03 | Phase 5 | Pending |
 | IMRS-04 | Phase 5 | Pending |
 | UX-01 | Phase 6 | Pending |
