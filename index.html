@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Meditation Timer</title>
     <link rel="stylesheet" href="/src/styles/main.css" />
     <link rel="stylesheet" href="/src/styles/variables.css" />
@@ -10,7 +10,7 @@
   <body style="margin:0; background: var(--color-bg-secondary); color: var(--color-text-primary); font-family: system-ui, sans-serif;">
 
     <!-- Setup Screen -->
-    <div id="setup-screen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 2rem;">
+    <div id="setup-screen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100dvh; gap: 2rem;">
       <h1 style="color: var(--color-text-primary); font-size: 1.5rem; font-weight: 300; letter-spacing: 0.1em;">Meditation Timer</h1>
 
       <!-- Preset duration buttons -->
@@ -45,7 +45,7 @@
     </div>
 
     <!-- Session Screen (hidden until session starts) -->
-    <div id="session-screen" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 2rem; background: var(--color-bg-primary);">
+    <div id="session-screen" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100dvh; gap: 2rem; background: var(--color-bg-primary);">
       <span id="timer-display" style="font-size: 5rem; font-weight: 200; color: var(--color-text-primary); letter-spacing: 0.05em; font-variant-numeric: tabular-nums;">10:00</span>
       <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
         <button

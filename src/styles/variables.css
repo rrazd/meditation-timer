@@ -16,3 +16,41 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* Mobile: safe-area insets (notch / Dynamic Island / home indicator)  */
+/* Requires viewport-fit=cover in the meta viewport tag.               */
+/* ------------------------------------------------------------------ */
+#setup-screen,
+#session-screen {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  box-sizing: border-box;
+}
+
+/* ------------------------------------------------------------------ */
+/* Touch: remove 300ms tap delay on all interactive elements           */
+/* touch-action: manipulation preserves scroll and pinch-zoom.         */
+/* Do NOT use touch-action: none (breaks scrolling).                   */
+/* ------------------------------------------------------------------ */
+button,
+input,
+a {
+  touch-action: manipulation;
+}
+
+/* ------------------------------------------------------------------ */
+/* Touch: minimum 44px touch targets on touchscreen devices            */
+/* Use pointer: coarse (not hover: none) — covers hybrid devices too.  */
+/* ------------------------------------------------------------------ */
+@media (pointer: coarse) {
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  input[type="number"] {
+    min-height: 44px;
+  }
+}
