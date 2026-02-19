@@ -1,12 +1,14 @@
 // src/ui/setup-screen.ts
+import type { SceneName } from '../scenes/scene.interface.js';
 
-export function initSetupScreen(onStart: (durationMs: number) => void): void {
+export function initSetupScreen(onStart: (durationMs: number, sceneName: SceneName) => void): void {
   const container = document.querySelector<HTMLElement>('#setup-screen')!;
   const durationInput = container.querySelector<HTMLInputElement>('#duration-input')!;
   const startButton = container.querySelector<HTMLButtonElement>('#start-button')!;
   const errorMsg = container.querySelector<HTMLElement>('#duration-error')!;
 
   const presetMinutes = [5, 10, 15, 20];
+  let selectedScene: SceneName = 'rain'; // Plan 03 adds scene picker UI that updates this
 
   // Wire preset buttons — clicking fills input and marks button active
   presetMinutes.forEach((minutes) => {
@@ -32,7 +34,7 @@ export function initSetupScreen(onStart: (durationMs: number) => void): void {
       return;
     }
     clearError();
-    onStart(raw * 60 * 1000);
+    onStart(raw * 60 * 1000, selectedScene);
   });
 
   function setActivePreset(activeBtn: HTMLButtonElement): void {

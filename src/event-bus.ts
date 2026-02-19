@@ -1,7 +1,7 @@
 // src/event-bus.ts
 // All inter-module communication flows through this singleton.
-// Phase 1 events:
-//   'session:start'    — detail: { durationMs: number }
+// Events:
+//   'session:start'    — detail: { durationMs: number, sceneName: SceneName }
 //   'session:stop'     — detail: {}
 //   'session:complete' — detail: {}
 //   'timer:tick'       — detail: { remaining: number, elapsed: number, progress: number, complete?: boolean }

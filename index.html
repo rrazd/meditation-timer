@@ -44,8 +44,14 @@
       <p id="duration-error" style="display: none; color: #f87171; font-size: 0.8rem;">Enter 1&#x2013;180 minutes</p>
     </div>
 
+    <!-- Nature scene canvas — fixed full-screen behind all UI. Hidden until session starts. -->
+    <canvas
+      id="scene-canvas"
+      style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;"
+    ></canvas>
+
     <!-- Session Screen (hidden until session starts) -->
-    <div id="session-screen" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100dvh; gap: 2rem; background: var(--color-bg-primary);">
+    <div id="session-screen" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100dvh; gap: 2rem; position: relative; z-index: 1; background: rgba(0,0,0,0.35);">
       <span id="timer-display" style="font-size: 5rem; font-weight: 200; color: var(--color-text-primary); letter-spacing: 0.05em; font-variant-numeric: tabular-nums;">10:00</span>
       <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
         <button
