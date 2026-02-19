@@ -64,10 +64,10 @@ Plans:
   2. Chime plays even if the browser tab was backgrounded during the session
   3. AudioContext is created lazily on the first user gesture (start button), not at page load, so autoplay policies are satisfied
   4. Session returns to setup screen after the chime completes
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 03-01: TBD
+- [ ] 03-01-PLAN.md — Chime audio asset (public/audio/chime.mp3), src/audio.ts (initAudio + playChime), src/main.ts wiring + human verify
 
 ### Phase 4: Animated Nature Scenes
 **Goal**: User selects from curated nature environments and sees a procedurally animated Canvas scene during meditation
@@ -78,12 +78,12 @@ Plans:
   2. The selected scene plays as a full-screen animated background during the session, rendered on Canvas
   3. Animations are smooth and organic (using procedural noise), capped at 30fps for battery efficiency
   4. Scenes respect prefers-reduced-motion by reducing or disabling particle effects
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
-- [ ] 04-03: TBD
+- [ ] 04-01-PLAN.md — simplex-noise install, IScene interface, SceneController, state/event-bus/main wiring, canvas in HTML, session screen transparency fix
+- [ ] 04-02-PLAN.md — RainScene, ForestScene, OceanScene full implementations
+- [ ] 04-03-PLAN.md — Scene selector UI (Rain/Forest/Ocean buttons on setup screen) + human verify
 
 ### Phase 5: Ambient Audio and Scene Pairing
 **Goal**: Each nature scene is accompanied by its matching ambient sound, creating a unified immersive environment

@@ -47,10 +47,17 @@
     <!-- Session Screen (hidden until session starts) -->
     <div id="session-screen" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 2rem; background: var(--color-bg-primary);">
       <span id="timer-display" style="font-size: 5rem; font-weight: 200; color: var(--color-text-primary); letter-spacing: 0.05em; font-variant-numeric: tabular-nums;">10:00</span>
-      <button
-        id="stop-button"
-        style="padding: 0.5rem 1.5rem; background: transparent; color: var(--color-text-muted); border: 1px solid var(--color-border); border-radius: 0.375rem; cursor: pointer; font-size: 0.85rem;"
-      >End Session</button>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+        <button
+          id="pause-button"
+          aria-label="Pause session"
+          style="padding: 0.625rem 2rem; background: transparent; color: var(--color-accent); border: 1px solid var(--color-accent); border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem; min-height: 44px; touch-action: manipulation;"
+        >Pause</button>
+        <button
+          id="stop-button"
+          style="padding: 0.5rem 1.5rem; background: transparent; color: var(--color-text-muted); border: 1px solid var(--color-border); border-radius: 0.375rem; cursor: pointer; font-size: 0.85rem; min-height: 44px; touch-action: manipulation;"
+        >End Session</button>
+      </div>
     </div>
 
     <script type="module" src="/src/main.ts"></script>
