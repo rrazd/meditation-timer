@@ -15,21 +15,40 @@ const timer = new Timer();
 initSetupScreen((durationMs: number) => {
   state.sessionDurationMs = durationMs;
   state.sessionActive = true;
+  state.sessionPaused = false;
 
   timer.start(durationMs);
   transitionToSession();
 });
 
 // Wire session screen — stop button handler
-initSessionScreen(() => {
+const { reset: resetSessionScreen } = initSessionScreen(() => {
   state.sessionActive = false;
+  state.sessionPaused = false;
   timer.stop();
+  resetSessionScreen();
   transitionToSetup();
 });
 
 // Session complete — timer reached zero
 bus.on('session:complete', () => {
+  if (!state.sessionActive) return; // Stop already handled this — ignore
   state.sessionActive = false;
+  state.sessionPaused = false;
+  resetSessionScreen();
   // Phase 3 will call playChime() here
   transitionToSetup();
+});
+
+bus.on('session:pause', () => {
+  timer.pause();
+  state.sessionPaused = true;
+  // Wake lock intentionally NOT released on pause — screen stays on
+  // so user can see the frozen timer. Browser auto-releases if tab is hidden.
+});
+
+bus.on('session:resume', () => {
+  timer.resume();
+  state.sessionPaused = false;
+  // Note: acquireWakeLock() called here in Plan 02-02 after wake-lock.ts exists
 });
