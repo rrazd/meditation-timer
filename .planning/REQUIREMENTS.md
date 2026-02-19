@@ -9,8 +9,8 @@
 
 - [x] **TIMER-01**: User can set a custom meditation duration before starting (preset options: 5, 10, 15, 20 min; plus custom numeric input)
 - [x] **TIMER-02**: User can start a meditation session from the setup screen
-- [ ] **TIMER-03**: User can pause a session when interrupted and resume it
-- [ ] **TIMER-04**: User can stop a session early and return to the setup screen
+- [x] **TIMER-03**: User can pause a session when interrupted and resume it
+- [x] **TIMER-04**: User can stop a session early and return to the setup screen
 - [x] **TIMER-05**: User sees a subtle countdown display of remaining time during the session
 - [ ] **TIMER-06**: A gentle chime sounds when the timer reaches zero and the session ends
 
@@ -73,8 +73,8 @@
 |-------------|-------|--------|
 | TIMER-01 | Phase 1 | Complete |
 | TIMER-02 | Phase 1 | Complete |
-| TIMER-03 | Phase 2 | Pending |
-| TIMER-04 | Phase 2 | Pending |
+| TIMER-03 | Phase 2 | Complete |
+| TIMER-04 | Phase 2 | Complete |
 | TIMER-05 | Phase 1 | Complete |
 | TIMER-06 | Phase 3 | Pending |
 | IMRS-01 | Phase 4 | Pending |

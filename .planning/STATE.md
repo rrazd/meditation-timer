@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-17)
 
 ## Current Position
 
-Phase: 2 of 7 (Screen Wake Lock) — Phase 1 Timer Core complete
-Plan: 0 of 2 in current phase (ready to begin)
-Status: Phase 1 complete — all 3 plans delivered and verified; ready for Phase 2
-Last activity: 2026-02-18 — Completed 01-03 Task 3 human verification (all 18 steps approved); Phase 1 Timer Core complete
+Phase: 2 of 7 (Session Controls and Platform Resilience) — Phase 1 Timer Core complete
+Plan: 1 of 2 in current phase (02-01 complete)
+Status: Phase 2 in progress — 02-01 pause/resume controls delivered; 02-02 screen wake lock next
+Last activity: 2026-02-19 — Completed 02-01 pause/resume session controls (TIMER-03, TIMER-04)
 
-Progress: [###░░░░░░░] 21%
+Progress: [####░░░░░░] 28%
 
 ## Performance Metrics
 
@@ -28,10 +28,11 @@ Progress: [###░░░░░░░] 21%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-timer-core | 3/3 (complete) | 17 min | ~6 min |
+| 02-session-controls-and-platform-resilience | 1/2 (in progress) | 5 min | ~5 min |
 
 **Recent Trend:**
-- Last 5 plans: 4 min, 2 min, 17 min (01-03 with human verify)
-- Trend: Fast — Phase 1 complete, all requirements verified
+- Last 5 plans: 4 min, 2 min, 17 min (01-03 with human verify), 5 min (02-01)
+- Trend: Fast — Phase 1 complete, Phase 2 plan 1 complete
 
 *Updated after each plan completion*
 
@@ -57,6 +58,10 @@ Recent decisions affecting current work:
 - [Phase 01-timer-core]: GSAP display toggle deferred to onComplete callback — GSAP cannot animate display:none elements
 - [Phase 01-timer-core]: Single Timer instance in main.ts — UI modules never instantiate Timer directly
 - [01-03]: getAnimDuration() helper centralizes prefers-reduced-motion check and is called per animation (not cached) so OS setting changes are respected immediately
+- [02-01]: initSessionScreen returns { reset } instead of void — caller (main.ts) owns teardown, keeps UI module decoupled
+- [02-01]: isPaused local var in session-screen.ts is source of truth for button state; state.sessionPaused mirrors it for future consumers (wake lock)
+- [02-01]: Wake lock intentionally NOT released on pause — screen stays on so user can see frozen timer
+- [02-01]: Race guard in session:complete (if !state.sessionActive return) prevents double-transition when stop and complete fire close together
 
 ### Pending Todos
 
@@ -68,6 +73,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-18
-Stopped at: Completed 01-03-PLAN.md — Phase 1 Timer Core fully complete (all 3 plans, all requirements verified)
+Last session: 2026-02-19
+Stopped at: Completed 02-01-PLAN.md — Phase 2 Plan 1 complete (pause/resume controls, TIMER-03 and TIMER-04)
 Resume file: None
