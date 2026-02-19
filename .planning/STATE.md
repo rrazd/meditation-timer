@@ -5,34 +5,34 @@
 See: .planning/PROJECT.md (updated 2026-02-17)
 
 **Core value:** A distraction-free, visually immersive meditation session that starts in seconds and gets out of the way.
-**Current focus:** Phase 2: Screen Wake Lock
+**Current focus:** Phase 2: Complete — Phase 3: Ambient Audio next
 
 ## Current Position
 
-Phase: 2 of 7 (Session Controls and Platform Resilience) — Phase 1 Timer Core complete
-Plan: 1 of 2 in current phase (02-01 complete)
-Status: Phase 2 in progress — 02-01 pause/resume controls delivered; 02-02 screen wake lock next
-Last activity: 2026-02-19 — Completed 02-01 pause/resume session controls (TIMER-03, TIMER-04)
+Phase: 2 of 7 (Session Controls and Platform Resilience) — Phase 2 complete
+Plan: 2 of 2 in current phase (02-01 and 02-02 complete)
+Status: Phase 2 complete — screen wake lock, 100dvh, safe-area insets, touch targets delivered; Phase 3 Ambient Audio next
+Last activity: 2026-02-19 — Completed 02-02 screen wake lock and mobile platform resilience (UX-05, UX-06)
 
-Progress: [####░░░░░░] 28%
+Progress: [#####░░░░░] 42%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3 (Phase 1 Timer Core: all 3 plans complete)
-- Average duration: ~6 min (includes human verification wait)
-- Total execution time: 0.28 hours
+- Total plans completed: 5 (Phase 1: 3 plans, Phase 2: 2 plans)
+- Average duration: ~5 min (includes human verification wait)
+- Total execution time: 0.36 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-timer-core | 3/3 (complete) | 17 min | ~6 min |
-| 02-session-controls-and-platform-resilience | 1/2 (in progress) | 5 min | ~5 min |
+| 02-session-controls-and-platform-resilience | 2/2 (complete) | 7 min | ~3.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 4 min, 2 min, 17 min (01-03 with human verify), 5 min (02-01)
-- Trend: Fast — Phase 1 complete, Phase 2 plan 1 complete
+- Last 5 plans: 2 min, 17 min (01-03 with human verify), 5 min (02-01), 2 min (02-02)
+- Trend: Fast — Phase 2 complete
 
 *Updated after each plan completion*
 
@@ -62,6 +62,11 @@ Recent decisions affecting current work:
 - [02-01]: isPaused local var in session-screen.ts is source of truth for button state; state.sessionPaused mirrors it for future consumers (wake lock)
 - [02-01]: Wake lock intentionally NOT released on pause — screen stays on so user can see frozen timer
 - [02-01]: Race guard in session:complete (if !state.sessionActive return) prevents double-transition when stop and complete fire close together
+- [02-02]: Null-check (wakeLock !== null) used instead of .released property — more consistent across browser implementations
+- [02-02]: visibilitychange listener registered once at startup — avoids listener leak from add/remove on session transitions
+- [02-02]: 100dvh used instead of 100vh — fixes iOS Safari overflow when address bar is visible
+- [02-02]: pointer:coarse used for touch target media query (not hover:none) — correctly covers hybrid devices
+- [02-02]: user-scalable=no deliberately omitted from viewport meta — violates WCAG SC 1.4.4 Resize Text
 
 ### Pending Todos
 
@@ -74,5 +79,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 02-01-PLAN.md — Phase 2 Plan 1 complete (pause/resume controls, TIMER-03 and TIMER-04)
+Stopped at: Completed 02-02-PLAN.md — Phase 2 complete (screen wake lock, mobile layout, UX-05 and UX-06)
 Resume file: None

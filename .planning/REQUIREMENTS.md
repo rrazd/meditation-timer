@@ -27,8 +27,8 @@
 - [ ] **UX-02**: The scene animation and ambient audio fade out gently when a session ends, followed by the chime
 - [ ] **UX-03**: The session screen enters full-screen mode when started, with a distraction-free view
 - [ ] **UX-04**: Session controls (pause, stop) are hidden during immersion and revealed by tapping/clicking the screen
-- [ ] **UX-05**: Screen wake lock prevents the device from sleeping during an active session
-- [ ] **UX-06**: The app is responsive and fully usable on mobile browsers (touch targets, viewport handling)
+- [x] **UX-05**: Screen wake lock prevents the device from sleeping during an active session
+- [x] **UX-06**: The app is responsive and fully usable on mobile browsers (touch targets, viewport handling)
 
 ## v2 Requirements
 
@@ -85,8 +85,8 @@
 | UX-02 | Phase 6 | Pending |
 | UX-03 | Phase 7 | Pending |
 | UX-04 | Phase 7 | Pending |
-| UX-05 | Phase 2 | Pending |
-| UX-06 | Phase 2 | Pending |
+| UX-05 | Phase 2 | Complete |
+| UX-06 | Phase 2 | Complete |
 
 **Coverage:**
 - v1 requirements: 16 total
