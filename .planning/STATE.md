@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-17)
 
 **Core value:** A distraction-free, visually immersive meditation session that starts in seconds and gets out of the way.
-**Current focus:** Phase 3: Session Audio Foundation — 03-01 complete (awaiting human verify checkpoint), Phase 3 in progress
+**Current focus:** Phase 4: Animated Nature Scenes — Phase 3 complete, ready to begin Phase 4
 
 ## Current Position
 
-Phase: 3 of 7 (Session Audio Foundation) — in progress
-Plan: 1 of 1 in current phase (03-01 automated tasks complete; Task 4 human-verify checkpoint pending)
-Status: Phase 3 in progress — audio.ts created, main.ts wired; awaiting human verification of chime playback
-Last activity: 2026-02-19 — Completed 03-01 automated tasks (audio.ts + main.ts wiring, TIMER-06)
+Phase: 3 of 7 (Session Audio Foundation) — complete
+Plan: 1 of 1 complete in Phase 3 (03-01 fully complete, human verify approved)
+Status: Phase 3 complete — chime plays on natural timer expiry, human verified all four browser scenarios
+Last activity: 2026-02-19 — Completed 03-01 fully (audio.ts + main.ts wiring + human verify, TIMER-06)
 
-Progress: [######░░░░] 46%
+Progress: [#######░░░] 54%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6 (Phase 1: 3 plans, Phase 2: 2 plans, Phase 3: 1 plan in progress)
+- Total plans completed: 7 (Phase 1: 3 plans, Phase 2: 2 plans, Phase 3: 1 plan)
 - Average duration: ~5 min (includes human verification wait)
-- Total execution time: 0.49 hours
+- Total execution time: ~0.57 hours
 
 **By Phase:**
 
@@ -29,11 +29,11 @@ Progress: [######░░░░] 46%
 |-------|-------|-------|----------|
 | 01-timer-core | 3/3 (complete) | 17 min | ~6 min |
 | 02-session-controls-and-platform-resilience | 2/2 (complete) | 7 min | ~3.5 min |
-| 03-session-audio-foundation | 1/1 automated tasks done | 8 min | ~8 min |
+| 03-session-audio-foundation | 1/1 (complete) | 8 min | ~8 min |
 
 **Recent Trend:**
 - Last 5 plans: 17 min (01-03 with human verify), 5 min (02-01), 2 min (02-02), 8 min (03-01)
-- Trend: Fast — Phase 3 audio foundation automated tasks complete
+- Trend: Fast — Phase 3 audio foundation complete, Phase 4 next
 
 *Updated after each plan completion*
 
@@ -73,6 +73,7 @@ Recent decisions affecting current work:
 - [03-01]: AudioBufferSourceNode is local to each playChime() call (single-use); only chimeBuffer stored at module scope (reusable AudioBuffer)
 - [03-01]: Non-fatal chime failure: fetch/decode errors caught, playChime() resolves immediately so transitionToSetup() still runs
 - [03-01]: playChime() called only in session:complete handler (natural expiry) — no chime on manual stop
+- [03-01]: Phase 2 wiring preserved in main.ts (wake lock, pause/resume, resetSessionScreen, visibilitychange) — plan template was simplified; actual code kept full Phase 2 additions
 
 ### Pending Todos
 
@@ -85,5 +86,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 03-01 automated tasks — at Task 4 human-verify checkpoint (chime playback in browser)
+Stopped at: Completed 03-01 fully — Phase 3 complete (TIMER-06 satisfied, human verify approved)
 Resume file: None
