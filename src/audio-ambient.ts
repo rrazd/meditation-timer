@@ -41,10 +41,15 @@ export async function startAmbient(ctx: AudioContext, sceneName: SceneName): Pro
   if (sessionGeneration !== myGeneration) return;
 
   const masterGain = ctx.createGain();
-  masterGain.connect(ctx.destination);
   const now = ctx.currentTime;
   masterGain.gain.setValueAtTime(0, now);
-  masterGain.gain.linearRampToValueAtTime(ambientMuted ? 0 : PEAK_GAIN, now + FADE_IN_S);
+  if (ambientMuted) {
+    // Start disconnected — no path to destination means no denormal noise on iOS.
+    // setAmbientMuted(false) will reconnect and ramp up when the user unmutes.
+  } else {
+    masterGain.connect(ctx.destination);
+    masterGain.gain.linearRampToValueAtTime(PEAK_GAIN, now + FADE_IN_S);
+  }
 
   const { input, output } = createFilterChain(ctx, sceneName);
 
@@ -74,13 +79,18 @@ export async function startAmbient(ctx: AudioContext, sceneName: SceneName): Pro
 export function setAmbientMuted(ctx: AudioContext, muted: boolean): void {
   ambientMuted = muted;
   if (!activeMasterGain) return;
-  const now = ctx.currentTime;
-  try { activeMasterGain.gain.cancelAndHoldAtTime(now); }
-  catch {
-    activeMasterGain.gain.cancelScheduledValues(now);
-    activeMasterGain.gain.setValueAtTime(activeMasterGain.gain.value, now);
+  if (muted) {
+    // Disconnect from destination — a connected node at gain≈0 can produce
+    // denormal-number noise on iOS WebKit even when the gain value is zero.
+    activeMasterGain.gain.setValueAtTime(0, ctx.currentTime);
+    activeMasterGain.disconnect();
+  } else {
+    // Reconnect then ramp up from silence
+    activeMasterGain.connect(ctx.destination);
+    const now = ctx.currentTime;
+    activeMasterGain.gain.setValueAtTime(0, now);
+    activeMasterGain.gain.linearRampToValueAtTime(PEAK_GAIN, now + 0.3);
   }
-  activeMasterGain.gain.linearRampToValueAtTime(muted ? 0 : PEAK_GAIN, now + 0.3);
 }
 
 /**
@@ -107,6 +117,11 @@ export function stopAmbient(ctx: AudioContext, fadeDurationS: number = FADE_OUT_
   if (!src || !gain) return;
 
   const now = ctx.currentTime;
+
+  // If the gain node was disconnected (mute state), reconnect so the fade-out
+  // is audible — particularly important for the session-complete/chime crossfade.
+  // If already at 0 (was muted), this just produces a silent fade, which is fine.
+  try { gain.connect(ctx.destination); } catch { /* already connected */ }
 
   // cancelAndHoldAtTime safely interrupts an in-progress fade-in
   try {
