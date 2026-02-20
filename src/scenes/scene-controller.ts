@@ -60,7 +60,9 @@ export function initSceneController(canvas: HTMLCanvasElement): void {
     stopScene(); // cancel any previous rAF loop and destroy previous scene
     activeScene = SCENE_MAP[sceneName]?.() ?? SCENE_MAP.rain();
     activeScene.init(canvas, options);
-    canvas.style.display = 'block';
+    // Canvas is revealed by transitionToSession() — not here — to prevent
+    // the scene bleeding through the setup card's backdrop-filter glass effect
+    // during the async gap between session:start and the screen transition.
     lastFrameTime = null; // reset so first frame dt is 0
     rafId = requestAnimationFrame(loop);
   }
@@ -91,7 +93,16 @@ export function initSceneController(canvas: HTMLCanvasElement): void {
   });
 
   bus.on('session:stop', stopScene);
-  bus.on('session:complete', stopScene);
+
+  // On complete: freeze animation (cancel rAF) but keep the canvas visible so the
+  // affirmation overlays the last rendered frame. main.ts emits session:stop after
+  // the user dismisses the affirmation to do final cleanup.
+  bus.on('session:complete', () => {
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  });
 
   // rAF pauses automatically in background tabs (correct behavior by design).
   // No visibilitychange handler needed — the canvas stops, the Web Worker

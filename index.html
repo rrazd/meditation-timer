@@ -1,86 +1,252 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" style="background:#040c1a;overflow:hidden;">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Meditation Timer</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/src/styles/main.css" />
     <link rel="stylesheet" href="/src/styles/variables.css" />
   </head>
-  <body style="margin:0; background: var(--color-bg-secondary); color: var(--color-text-primary); font-family: system-ui, sans-serif;">
+  <body style="margin:0; overflow:hidden; background:#040c1a; color: var(--color-text-primary); font-family: system-ui, -apple-system, sans-serif;">
+
+    <!-- Cosmic star field — twinkling ambient background -->
+    <canvas id="bg-stars" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
+
+    <!-- Ambient depth gradients (glass blur surface) -->
+    <div style="position:fixed;top:-25%;right:-15%;width:70vmax;height:70vmax;border-radius:50%;background:radial-gradient(circle,rgba(24,50,110,0.5) 0%,transparent 68%);pointer-events:none;z-index:0;"></div>
+    <div style="position:fixed;bottom:-25%;left:-15%;width:65vmax;height:65vmax;border-radius:50%;background:radial-gradient(circle,rgba(10,36,82,0.45) 0%,transparent 68%);pointer-events:none;z-index:0;"></div>
+    <div style="position:fixed;top:35%;left:30%;width:35vmax;height:35vmax;border-radius:50%;background:radial-gradient(circle,rgba(20,55,115,0.28) 0%,transparent 70%);pointer-events:none;z-index:0;"></div>
 
     <!-- Setup Screen -->
-    <div id="setup-screen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100dvh; gap: 2rem;">
-      <h1 style="color: var(--color-text-primary); font-size: 1.5rem; font-weight: 300; letter-spacing: 0.1em;">Meditation Timer</h1>
+    <div id="setup-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;position:relative;z-index:1;">
 
-      <!-- Preset duration buttons -->
-      <div style="display: flex; gap: 0.75rem;">
-        <button data-preset="5" style="padding: 0.5rem 1.25rem; background: var(--color-surface); color: var(--color-text-primary); border: 1px solid var(--color-border); border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem;">5 min</button>
-        <button data-preset="10" style="padding: 0.5rem 1.25rem; background: var(--color-surface); color: var(--color-text-primary); border: 1px solid var(--color-border); border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem;">10 min</button>
-        <button data-preset="15" style="padding: 0.5rem 1.25rem; background: var(--color-surface); color: var(--color-text-primary); border: 1px solid var(--color-border); border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem;">15 min</button>
-        <button data-preset="20" style="padding: 0.5rem 1.25rem; background: var(--color-surface); color: var(--color-text-primary); border: 1px solid var(--color-border); border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem;">20 min</button>
-      </div>
+      <!-- Liquid glass card -->
+      <div id="setup-card" style="display:flex;flex-direction:column;align-items:center;gap:0;padding:2.75rem 3rem;background:rgba(255,255,255,0.015);backdrop-filter:blur(80px) saturate(1.3);-webkit-backdrop-filter:blur(80px) saturate(1.3);border:1px solid rgba(255,255,255,0.022);border-radius:32px;box-shadow:0 0 60px 20px rgba(80,90,180,0.10),0 0 120px 60px rgba(60,70,160,0.07),0 0 200px 100px rgba(40,50,140,0.05);min-width:300px;">
 
-      <!-- Scene selector — choose nature environment -->
-      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
-        <span style="color: var(--color-text-muted); font-size: 0.8rem; letter-spacing: 0.05em;">environment</span>
-        <div style="display: flex; gap: 0.75rem;">
-          <button
-            data-scene="rain"
-            style="padding: 0.5rem 1.25rem; background: var(--color-surface); color: var(--color-accent); border: 1px solid var(--color-accent); border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem;"
-          >Rain</button>
-          <button
-            data-scene="forest"
-            style="padding: 0.5rem 1.25rem; background: var(--color-surface); color: var(--color-text-primary); border: 1px solid var(--color-border); border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem;"
-          >Forest</button>
-          <button
-            data-scene="ocean"
-            style="padding: 0.5rem 1.25rem; background: var(--color-surface); color: var(--color-text-primary); border: 1px solid var(--color-border); border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem;"
-          >Ocean</button>
+        <h1 style="margin:0 0 calc(2.5rem + 12px);color:rgba(255,255,255,0.88);font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:2.9rem;font-weight:300;letter-spacing:0.06em;text-align:center;line-height:1.1;">Meditation Timer</h1>
+
+        <!-- Duration section with Preset / Custom toggle -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;width:100%;margin-bottom:calc(2.5rem + 12px);">
+          <span style="color:rgba(255,255,255,0.58);font-size:0.75rem;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;margin-top:12px;">Duration</span>
+
+          <!-- Segmented control -->
+          <div id="seg-control" style="position:relative;display:inline-flex;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.10);border-radius:50px;padding:3px;gap:2px;">
+            <!-- Hover ghost — follows cursor before click -->
+            <span id="seg-hover" style="position:absolute;top:3px;bottom:3px;left:3px;border-radius:50px;background:rgba(255,255,255,0.07);pointer-events:none;will-change:transform,opacity;opacity:0;"></span>
+            <!-- Selected pill -->
+            <span id="seg-pill" style="position:absolute;top:3px;bottom:3px;left:3px;border-radius:50px;background:rgba(42,65,145,0.55);box-shadow:0 1px 4px rgba(0,0,0,0.2);pointer-events:none;will-change:transform;"></span>
+            <button id="tab-preset" style="position:relative;z-index:1;padding:0.38rem 1.3rem;background:transparent;color:rgba(255,255,255,0.90);border:none;border-radius:50px;cursor:pointer;font-size:0.875rem;font-weight:500;letter-spacing:0.06em;touch-action:manipulation;">Preset</button>
+            <button id="tab-custom" style="position:relative;z-index:1;padding:0.38rem 1.3rem;background:transparent;color:rgba(155,178,255,0.68);border:none;border-radius:50px;cursor:pointer;font-size:0.875rem;font-weight:400;letter-spacing:0.06em;touch-action:manipulation;">Custom</button>
+          </div>
+
+          <!-- Panel wrapper — fixed height prevents layout shift when toggling -->
+          <div style="position:relative;height:4.5rem;width:100%;margin-top:-12px;">
+
+            <!-- Preset panel -->
+            <div id="panel-preset" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;gap:0.6rem;white-space:nowrap;">
+              <span id="preset-hover" style="position:absolute;top:0;bottom:0;left:0;border-radius:50px;background:rgba(255,255,255,0.07);pointer-events:none;will-change:transform,opacity;opacity:0;"></span>
+              <button data-preset="10" style="position:relative;z-index:1;padding:0.42rem 1.1rem;background:rgba(42,65,145,0.55);color:rgba(255,255,255,0.90);border:1.5px solid rgba(70,100,185,0.50);border-radius:50px;cursor:pointer;font-size:12.5px;font-weight:600;touch-action:manipulation;">10 minutes</button>
+              <button data-preset="15" style="position:relative;z-index:1;padding:0.42rem 1.1rem;background:transparent;color:rgba(255,255,255,0.70);border:1.5px solid rgba(255,255,255,0.22);border-radius:50px;cursor:pointer;font-size:12.5px;font-weight:600;touch-action:manipulation;">15 minutes</button>
+              <button data-preset="20" style="position:relative;z-index:1;padding:0.42rem 1.1rem;background:transparent;color:rgba(255,255,255,0.70);border:1.5px solid rgba(255,255,255,0.22);border-radius:50px;cursor:pointer;font-size:12.5px;font-weight:600;touch-action:manipulation;">20 minutes</button>
+            </div>
+
+            <!-- Custom panel (hidden by default) -->
+            <div id="panel-custom" style="position:absolute;top:4px;left:50%;transform:translateX(-50%);display:none;flex-direction:column;align-items:center;gap:0.45rem;padding-top:8px;">
+              <div class="float-field">
+                <input
+                  id="duration-input"
+                  type="number"
+                  min="1"
+                  max="60"
+                  value="10"
+                  placeholder=" "
+                  class="float-input"
+                />
+                <label for="duration-input" class="float-label">Minutes</label>
+              </div>
+              <span style="color:rgba(255,255,255,0.45);font-size:0.625rem;white-space:nowrap;">Please enter a whole number from 1 &#x2013; 60</span>
+              <p id="duration-error" style="display:none;color:rgba(248,113,113,0.9);font-size:0.75rem;margin:0;white-space:nowrap;">Enter a whole number between 1 to 60</p>
+            </div>
+
+          </div>
         </div>
+
+        <!-- Scene selector — choose nature environment -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;margin-bottom:calc(2.5rem + 32px);margin-top:8px;">
+          <span style="color:rgba(255,255,255,0.58);font-size:0.75rem;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;">Environment</span>
+          <div style="display:flex;gap:0.9rem;">
+
+            <!-- Rain (default active) -->
+            <button data-scene="rain" style="position:relative;background:none;border:2px solid rgba(255,255,255,0.12);border-radius:12px;padding:0;cursor:pointer;overflow:hidden;touch-action:manipulation;display:block;box-shadow:0 4px 16px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.06);">
+              <svg width="88" height="118" viewBox="0 0 88 118" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+                <defs>
+                  <linearGradient id="rn-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#06041a"/><stop offset="100%" stop-color="#180a38"/></linearGradient>
+                  <radialGradient id="rn-glow" cx="50%" cy="30%" r="55%"><stop offset="0%" stop-color="#3a1a70" stop-opacity="0.75"/><stop offset="100%" stop-color="#06041a" stop-opacity="0"/></radialGradient>
+                  <linearGradient id="rn-fade" x1="0" y1="0" x2="0" y2="1"><stop offset="60%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity="0.72"/></linearGradient>
+                </defs>
+                <rect width="88" height="118" fill="url(#rn-sky)"/>
+                <ellipse cx="44" cy="35" rx="58" ry="44" fill="url(#rn-glow)"/>
+                <path d="M-2,80 L10,56 L20,64 L34,44 L46,60 L58,42 L70,54 L82,46 L90,50 L90,118 L-2,118Z" fill="#2a1648" opacity="0.60"/>
+                <path d="M-2,90 L8,72 L20,80 L36,60 L48,74 L62,56 L76,68 L90,62 L90,118 L-2,118Z" fill="#180a2e" opacity="0.88"/>
+                <path d="M-2,104 Q18,98 44,102 Q70,106 90,100 L90,118 L-2,118Z" fill="#0a0416"/>
+                <g stroke="#7a50b0" stroke-width="0.55" opacity="0.30">
+                  <line x1="6" y1="4" x2="1" y2="36"/><line x1="18" y1="0" x2="13" y2="32"/><line x1="30" y1="6" x2="25" y2="38"/>
+                  <line x1="42" y1="2" x2="37" y2="34"/><line x1="56" y1="5" x2="51" y2="37"/><line x1="68" y1="0" x2="63" y2="32"/>
+                  <line x1="80" y1="4" x2="75" y2="36"/>
+                </g>
+                <g stroke="#9a70d0" stroke-width="0.7" opacity="0.40">
+                  <line x1="4" y1="34" x2="-1" y2="70"/><line x1="16" y1="26" x2="11" y2="62"/><line x1="28" y1="38" x2="23" y2="74"/>
+                  <line x1="40" y1="28" x2="35" y2="64"/><line x1="52" y1="36" x2="47" y2="72"/><line x1="64" y1="24" x2="59" y2="60"/>
+                  <line x1="76" y1="34" x2="71" y2="70"/><line x1="86" y1="28" x2="81" y2="64"/>
+                </g>
+                <g stroke="#b890e8" stroke-width="0.85" opacity="0.50">
+                  <line x1="10" y1="62" x2="5" y2="100"/><line x1="24" y1="54" x2="19" y2="92"/><line x1="38" y1="66" x2="33" y2="104"/>
+                  <line x1="52" y1="58" x2="47" y2="96"/><line x1="66" y1="64" x2="61" y2="102"/><line x1="80" y1="56" x2="75" y2="94"/>
+                </g>
+                <rect width="88" height="118" fill="url(#rn-fade)"/>
+              </svg>
+              <span class="scene-label" style="position:absolute;bottom:0;left:0;right:0;height:26px;display:flex;align-items:center;justify-content:center;background:rgba(6,2,18,0.68);font-size:12.25px;font-weight:500;color:rgba(255,255,255,0.88);pointer-events:none;">Rain</span>
+            </button>
+
+            <!-- Forest -->
+            <button data-scene="forest" style="position:relative;background:none;border:2px solid rgba(255,255,255,0.12);border-radius:12px;padding:0;cursor:pointer;overflow:hidden;touch-action:manipulation;display:block;box-shadow:0 4px 16px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.06);">
+              <svg width="88" height="118" viewBox="0 0 88 118" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+                <defs>
+                  <linearGradient id="fs-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#030a04"/><stop offset="100%" stop-color="#091808"/></linearGradient>
+                  <radialGradient id="fs-glow" cx="50%" cy="45%" r="48%"><stop offset="0%" stop-color="#22532a" stop-opacity="0.75"/><stop offset="100%" stop-color="#030a04" stop-opacity="0"/></radialGradient>
+                  <linearGradient id="fs-fade" x1="0" y1="0" x2="0" y2="1"><stop offset="55%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity="0.72"/></linearGradient>
+                </defs>
+                <rect width="88" height="118" fill="url(#fs-sky)"/>
+                <ellipse cx="44" cy="55" rx="54" ry="50" fill="url(#fs-glow)"/>
+                <!-- Far canopy -->
+                <path d="M-2,72 Q14,54 28,62 Q40,50 52,60 Q64,48 78,58 L90,60 L90,118 L-2,118Z" fill="#1e4824" opacity="0.45"/>
+                <!-- Left trees far -->
+                <path d="M-2,118 L-2,85 L7,60 L16,85Z" fill="#163a1a" opacity="0.8"/>
+                <path d="M8,118 L8,88 L17,64 L26,88Z" fill="#142e18" opacity="0.85"/>
+                <!-- Right trees far -->
+                <path d="M64,118 L64,86 L73,62 L82,86Z" fill="#163a1a" opacity="0.8"/>
+                <path d="M74,118 L74,88 L83,64 L90,82 L90,118Z" fill="#142e18" opacity="0.85"/>
+                <!-- Mid trees -->
+                <path d="M18,118 L18,90 L28,65 L38,90Z" fill="#0e2410" opacity="0.9"/>
+                <path d="M52,118 L52,88 L62,62 L72,88Z" fill="#0e2410" opacity="0.9"/>
+                <!-- Near frame trees (darkest) -->
+                <path d="M-2,118 L-2,78 L10,46 L22,78 L22,118Z" fill="#060f07"/>
+                <path d="M66,118 L66,76 L78,44 L90,76 L90,118Z" fill="#060f07"/>
+                <!-- Ground mist -->
+                <path d="M-2,106 Q22,100 44,104 Q66,108 90,102 L90,118 L-2,118Z" fill="#060f07"/>
+                <ellipse cx="44" cy="108" rx="46" ry="7" fill="#1e5022" opacity="0.12"/>
+                <rect width="88" height="118" fill="url(#fs-fade)"/>
+              </svg>
+              <span class="scene-label" style="position:absolute;bottom:0;left:0;right:0;height:26px;display:flex;align-items:center;justify-content:center;background:rgba(3,10,4,0.65);font-size:12.25px;font-weight:500;color:rgba(255,255,255,0.88);pointer-events:none;">Forest</span>
+            </button>
+
+            <!-- Ocean -->
+            <button data-scene="ocean" style="position:relative;background:none;border:2px solid rgba(255,255,255,0.12);border-radius:12px;padding:0;cursor:pointer;overflow:hidden;touch-action:manipulation;display:block;box-shadow:0 4px 16px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.06);">
+              <svg width="88" height="118" viewBox="0 0 88 118" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+                <defs>
+                  <linearGradient id="oc-sky" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#030c14"/>
+                    <stop offset="60%"  stop-color="#042030"/>
+                    <stop offset="100%" stop-color="#063040"/>
+                  </linearGradient>
+                  <linearGradient id="oc-sea" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#063040"/>
+                    <stop offset="100%" stop-color="#020c14"/>
+                  </linearGradient>
+                  <radialGradient id="oc-moon-halo" cx="62%" cy="18%" r="28%">
+                    <stop offset="0%"   stop-color="#a0e8f0" stop-opacity="0.28"/>
+                    <stop offset="100%" stop-color="#042030"  stop-opacity="0"/>
+                  </radialGradient>
+                  <linearGradient id="oc-refl" x1="0.5" y1="0" x2="0.5" y2="1">
+                    <stop offset="0%"   stop-color="#60d8e8" stop-opacity="0.32"/>
+                    <stop offset="100%" stop-color="#60d8e8" stop-opacity="0"/>
+                  </linearGradient>
+                  <linearGradient id="oc-fade" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="50%" stop-color="#000" stop-opacity="0"/>
+                    <stop offset="100%" stop-color="#000" stop-opacity="0.72"/>
+                  </linearGradient>
+                </defs>
+                <!-- Deep teal night sky -->
+                <rect width="88" height="118" fill="url(#oc-sky)"/>
+                <!-- Stars -->
+                <circle cx="8"  cy="8"  r="0.7" fill="#a0e8f0" opacity="0.70"/>
+                <circle cx="22" cy="5"  r="0.6" fill="white"   opacity="0.55"/>
+                <circle cx="36" cy="12" r="0.5" fill="#a0e8f0" opacity="0.50"/>
+                <circle cx="14" cy="20" r="0.6" fill="white"   opacity="0.45"/>
+                <circle cx="50" cy="7"  r="0.55" fill="#a0e8f0" opacity="0.60"/>
+                <circle cx="6"  cy="30" r="0.5" fill="white"   opacity="0.40"/>
+                <circle cx="30" cy="22" r="0.5" fill="white"   opacity="0.38"/>
+                <circle cx="42" cy="28" r="0.4" fill="#a0e8f0" opacity="0.35"/>
+                <!-- Moon halo -->
+                <ellipse cx="56" cy="20" rx="24" ry="22" fill="url(#oc-moon-halo)"/>
+                <!-- Moon disc -->
+                <circle cx="58" cy="16" r="5" fill="#d8f4f8" opacity="0.92"/>
+                <circle cx="58" cy="16" r="3.5" fill="#edfafc"/>
+                <!-- Horizon -->
+                <line x1="-2" y1="62" x2="90" y2="62" stroke="#1a5060" stroke-width="0.6" opacity="0.80"/>
+                <!-- Sea -->
+                <rect x="-2" y="62" width="92" height="56" fill="url(#oc-sea)"/>
+                <!-- Moon column reflection -->
+                <path d="M48,63 L68,63 L62,82 L54,82Z" fill="url(#oc-refl)"/>
+                <!-- Wave crests — teal tint -->
+                <path d="M-2,68 Q22,65 44,68 Q66,71 90,68" stroke="rgba(80,200,220,0.38)" stroke-width="0.75" fill="none"/>
+                <path d="M-2,78 Q22,75 44,78 Q66,81 90,78" stroke="rgba(60,180,200,0.28)" stroke-width="0.65" fill="none"/>
+                <path d="M-2,90 Q22,87 44,90 Q66,93 90,90" stroke="rgba(40,160,180,0.20)" stroke-width="0.55" fill="none"/>
+                <rect width="88" height="118" fill="url(#oc-fade)"/>
+              </svg>
+              <span class="scene-label" style="position:absolute;bottom:0;left:0;right:0;height:26px;display:flex;align-items:center;justify-content:center;background:rgba(2,12,20,0.72);font-size:12.25px;font-weight:500;color:rgba(255,255,255,0.88);pointer-events:none;">Ocean</span>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- Start button — primary pill -->
+        <button
+          id="start-button"
+          style="padding:0.88rem 3.2rem;background:rgba(58,90,210,0.95);color:rgba(255,255,255,0.97);border:none;border-radius:50px;cursor:pointer;font-size:1rem;font-weight:500;letter-spacing:0.10em;box-shadow:0 4px 18px rgba(58,90,210,0.24);touch-action:manipulation;transition:filter 0.18s,transform 0.18s;"
+          onmouseenter="this.style.filter='brightness(1.12)';this.style.transform='scale(1.03)'"
+          onmouseleave="this.style.filter='brightness(1)';this.style.transform='scale(1)'"
+        >Start meditation</button>
+
       </div>
-
-      <!-- Custom duration input -->
-      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
-        <input
-          id="duration-input"
-          type="number"
-          min="1"
-          max="180"
-          value="10"
-          style="width: 6rem; padding: 0.5rem 0.75rem; background: var(--color-surface); color: var(--color-text-primary); border: 1px solid var(--color-border); border-radius: 0.375rem; font-size: 1.25rem; text-align: center;"
-        />
-        <span style="color: var(--color-text-muted); font-size: 0.8rem;">minutes (1&#x2013;180)</span>
-      </div>
-
-      <!-- Start button -->
-      <button
-        id="start-button"
-        style="padding: 0.75rem 2.5rem; background: var(--color-accent); color: #0f172a; border: none; border-radius: 0.375rem; cursor: pointer; font-size: 1rem; letter-spacing: 0.05em;"
-      >Begin</button>
-
-      <!-- Validation error (hidden by default) -->
-      <p id="duration-error" style="display: none; color: #f87171; font-size: 0.8rem;">Enter 1&#x2013;180 minutes</p>
     </div>
 
     <!-- Nature scene canvas — fixed full-screen behind all UI. Hidden until session starts. -->
     <canvas
       id="scene-canvas"
-      style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;"
+      style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;"
     ></canvas>
 
     <!-- Session Screen (hidden until session starts) -->
-    <div id="session-screen" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100dvh; gap: 2rem; position: relative; z-index: 1; background: rgba(0,0,0,0.35);">
-      <span id="timer-display" style="font-size: 5rem; font-weight: 200; color: var(--color-text-primary); letter-spacing: 0.05em; font-variant-numeric: tabular-nums;">10:00</span>
-      <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+    <div id="session-screen" style="display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;gap:2rem;position:relative;z-index:1;background:rgba(0,0,0,0.35);">
+      <!-- End-of-session affirmation — fades in over the scene when meditation completes -->
+      <div id="session-affirmation" style="display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:2rem;padding:2rem;text-align:center;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0.9rem;max-width:30rem;">
+          <p style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:300;font-size:clamp(2rem,5vw,3rem);color:rgba(255,255,255,0.94);line-height:1.2;letter-spacing:0.02em;text-shadow:0 2px 32px rgba(0,0,0,0.6);">You're done your meditation</p>
+          <p id="affirmation-text" style="margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:300;font-size:clamp(1.1rem,2.5vw,1.4rem);color:rgba(255,255,255,0.62);line-height:1.5;letter-spacing:0.03em;text-shadow:0 2px 16px rgba(0,0,0,0.5);"></p>
+        </div>
+        <button id="affirmation-end-button" style="padding:0.88rem 2.6rem;background:rgba(58,90,210,0.95);color:rgba(255,255,255,0.97);border:none;border-radius:50px;cursor:pointer;font-size:1rem;font-weight:500;letter-spacing:0.10em;box-shadow:0 4px 28px rgba(58,90,210,0.38);touch-action:manipulation;transition:filter 0.18s,transform 0.18s;" onmouseenter="this.style.filter='brightness(1.12)';this.style.transform='scale(1.03)'" onmouseleave="this.style.filter='brightness(1)';this.style.transform='scale(1)'">End Session</button>
+      </div>
+      <span id="timer-display" style="font-size:5rem;font-weight:300;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;color:var(--color-text-primary);letter-spacing:0.05em;font-variant-numeric:tabular-nums;">10:00</span>
+      <div style="display:flex;flex-direction:column;align-items:stretch;gap:1rem;width:fit-content;">
+        <!-- Pause button — primary pill -->
         <button
           id="pause-button"
           aria-label="Pause session"
-          style="padding: 0.625rem 2rem; background: transparent; color: var(--color-accent); border: 1px solid var(--color-accent); border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem; min-height: 44px; touch-action: manipulation;"
+          style="padding:0.80rem 2.6rem;background:rgba(62,92,200,0.92);color:rgba(255,255,255,0.97);border:none;border-radius:50px;cursor:pointer;font-size:0.95rem;font-weight:500;letter-spacing:0.10em;box-shadow:0 4px 24px rgba(62,92,200,0.32);touch-action:manipulation;transition:filter 0.18s,transform 0.18s;min-height:44px;"
+          onmouseenter="this.style.filter='brightness(1.12)';this.style.transform='scale(1.03)'"
+          onmouseleave="this.style.filter='brightness(1)';this.style.transform='scale(1)'"
         >Pause</button>
+        <!-- End Session button — secondary pill -->
         <button
           id="stop-button"
-          style="padding: 0.5rem 1.5rem; background: transparent; color: var(--color-text-muted); border: 1px solid var(--color-border); border-radius: 0.375rem; cursor: pointer; font-size: 0.85rem; min-height: 44px; touch-action: manipulation;"
+          style="padding:0.80rem 2.6rem;background:rgba(58,90,210,0.12);color:rgba(140,168,255,0.88);border:none;border-radius:50px;cursor:pointer;font-size:0.95rem;font-weight:500;letter-spacing:0.10em;touch-action:manipulation;transition:filter 0.18s,transform 0.18s;min-height:44px;"
+          onmouseenter="this.style.filter='brightness(1.15)';this.style.transform='scale(1.03)'"
+          onmouseleave="this.style.filter='brightness(1)';this.style.transform='scale(1)'"
         >End Session</button>
       </div>
     </div>

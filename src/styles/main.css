@@ -1,2 +1,84 @@
 /* src/styles/main.css */
 @import "tailwindcss";
+
+/* ── Scene environment button brightness states ─────────────────────────────── */
+/* opacity is compositor-only — no paint — so JS data-active toggling is instant */
+[data-scene] svg          { opacity: 0.86; }
+[data-scene][data-active] svg       { opacity: 0.88; }
+/* Hover uses filter only (CSS-driven, never JS-triggered, so paint cost is fine) */
+[data-scene]:hover svg,
+[data-scene][data-active]:hover svg { opacity: 1; filter: brightness(1.2); }
+
+/* ── Floating label input (Gmail-style) ──────────────────────────────────── */
+.float-field {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid rgba(98,120,255,0.45);
+  border-radius: 10px;
+  background: transparent;
+}
+
+.float-field:focus-within {
+  border-color: rgba(108,140,255,0.80);
+}
+
+/* Rest state — label sits centred inside the field (acts as placeholder) */
+.float-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: rgba(155,178,255,0.65);
+  pointer-events: none;
+  font-family: system-ui, -apple-system, sans-serif;
+  white-space: nowrap;
+  transition: top 0.18s ease, transform 0.18s ease, font-size 0.18s ease, color 0.18s ease;
+}
+
+/* Floated state — label moves to top-inside, no background needed */
+.float-field:focus-within .float-label,
+.float-input:not(:placeholder-shown) + .float-label {
+  top: 6px;
+  transform: translate(-50%, 0);
+  font-size: 0.72rem;
+  color: rgba(108,140,255,0.90);
+}
+
+.float-input {
+  display: block;
+  width: 5rem;
+  padding: 1.5rem 0.8rem 0.4rem;
+  background: transparent;
+  color: rgba(255,255,255,0.92);
+  border: none;
+  font-size: 0.875rem;
+  font-family: inherit;
+  text-align: center;
+  outline: none;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.float-input::-webkit-outer-spin-button,
+.float-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+/* Setup card — very slow breathing glow, like drifting smoke */
+@keyframes cardSmokeBreathe {
+  0%, 100% { opacity: 0.94; }
+  50%       { opacity: 1;    }
+}
+#setup-card {
+  animation: cardSmokeBreathe 14s ease-in-out infinite;
+}
+
+/* Start button — slow pulsing glow, draws the eye without demanding it */
+@keyframes startButtonPulse {
+  0%, 100% { box-shadow: 0 4px 18px rgba(58,90,210,0.24); }
+  50%       { box-shadow: 0 4px 28px rgba(58,90,210,0.42), 0 0 14px rgba(90,120,255,0.18); }
+}
+#start-button {
+  animation: startButtonPulse 3.5s ease-in-out infinite;
+}

@@ -94,11 +94,11 @@ Plans:
   2. Ambient audio loops seamlessly with no audible gap or click at the loop point
   3. Selecting a scene on the setup screen automatically selects the matching audio -- they are paired, not independent choices
   4. Ambient audio uses Web Audio API AudioBufferSourceNode (not HTML audio element) for gapless looping
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
+- [ ] 05-01-PLAN.md — src/audio.ts (add getAudioContext export), src/audio-ambient.ts (full ambient synthesis module)
+- [ ] 05-02-PLAN.md — src/main.ts wiring (startAmbient/stopAmbient into session lifecycle) + human verify
 
 ### Phase 6: Session Transitions
 **Goal**: Sessions start and end with gentle, polished transitions rather than abrupt cuts
