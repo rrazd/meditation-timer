@@ -21,8 +21,15 @@ let activeChimeOscillators: OscillatorNode[] = [];
  * Idempotent: safe to call on every session start; only initializes once.
  */
 export async function initAudio(): Promise<void> {
-  if (audioCtx !== null) return;
+  if (audioCtx !== null) {
+    // iOS Safari suspends the context when the tab is backgrounded — resume it.
+    if (audioCtx.state === 'suspended') await audioCtx.resume();
+    return;
+  }
   audioCtx = new AudioContext();
+  // iOS Safari creates AudioContext in 'suspended' state even inside a user gesture.
+  // Calling resume() here, while still in the gesture handler, permanently unlocks audio.
+  if (audioCtx.state === 'suspended') await audioCtx.resume();
 }
 
 /**
