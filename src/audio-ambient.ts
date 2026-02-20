@@ -13,6 +13,8 @@ const LOOP_FADE_SAMPLES = 512;   // ~11.6 ms cosine fade at loop boundary — el
 // Module-level state — one ambient session at a time
 let activeSource: AudioBufferSourceNode | null = null;
 let activeMasterGain: GainNode | null = null;
+// Incremented by stopAmbient; lets startAmbient detect mid-build cancellation.
+let sessionGeneration = 0;
 
 // Cache buffers across sessions — buffer content is equivalent each regeneration,
 // but caching avoids ~10–30 ms main-thread work on session restart.
@@ -24,13 +26,17 @@ const bufferCache = new Map<SceneName, AudioBuffer>();
  * Safe to call before initAudio only if ctx is guaranteed non-null by the caller.
  */
 export async function startAmbient(ctx: AudioContext, sceneName: SceneName): Promise<void> {
-  stopAmbient(ctx); // clean up any running session
+  stopAmbient(ctx); // clean up any running session; also increments sessionGeneration
+  const myGeneration = sessionGeneration; // snapshot — if it changes, we were cancelled
 
   let buffer = bufferCache.get(sceneName);
   if (!buffer) {
     buffer = await buildSceneBuffer(ctx, sceneName);
     bufferCache.set(sceneName, buffer);
   }
+
+  // If stopAmbient was called while the buffer was building, abort — don't start audio.
+  if (sessionGeneration !== myGeneration) return;
 
   const masterGain = ctx.createGain();
   masterGain.connect(ctx.destination);
@@ -50,8 +56,11 @@ export async function startAmbient(ctx: AudioContext, sceneName: SceneName): Pro
   // On iOS the context can drift back to suspended during the async buffer build.
   // Re-resume before start() to ensure playback actually begins.
   if (ctx.state !== 'running') await ctx.resume();
-  source.start();
 
+  // Check again after the resume await — another async gap where stop could have fired.
+  if (sessionGeneration !== myGeneration) return;
+
+  source.start();
   activeSource = source;
   activeMasterGain = masterGain;
 }
@@ -63,6 +72,7 @@ export async function startAmbient(ctx: AudioContext, sceneName: SceneName): Pro
  * Safe to call when nothing is playing (no-op).
  */
 export function stopAmbient(ctx: AudioContext, fadeDurationS: number = FADE_OUT_S): void {
+  sessionGeneration++; // invalidate any startAmbient still awaiting its buffer/resume
   // Capture references before nulling — prevents source node leak if called twice
   const src = activeSource;
   const gain = activeMasterGain;
