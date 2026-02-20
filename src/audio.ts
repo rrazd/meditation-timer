@@ -54,7 +54,9 @@ export async function initAudio(): Promise<void> {
     // revert to AVAudioSessionCategoryAmbient (which the ringer switch mutes).
     // relay.muted=true + volume=0 means it produces no audible output.
     setTimeout(() => { try { osc.stop(); } catch { /* already stopped */ } }, 2000);
-    relay.muted = true; // belt-and-suspenders silence — both muted and volume=0
+    // Do NOT set relay.muted=true — iOS treats a muted element as not needing
+    // audio output and skips the AVAudioSessionCategoryPlayback upgrade.
+    // volume=0 keeps it silent while still signalling active playback to iOS.
     relay.srcObject = streamDest.stream;
     relay.play().catch(() => {});
   } catch { /* MediaStreamDestination unavailable — silent-mode fix skipped */ }
