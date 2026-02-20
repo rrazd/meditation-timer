@@ -65,12 +65,12 @@ export function initSessionScreen(
     muteToast.textContent = message;
     muteToast.style.transition = 'none';
     muteToast.style.opacity = '1';
-    // Hold for 2.5 s then fade out over 0.9 s
+    // Hold for 5.5 s then fade out over 0.9 s
     toastTimer = setTimeout(() => {
       muteToast.style.transition = 'opacity 0.9s ease';
       muteToast.style.opacity = '0';
       toastTimer = null;
-    }, 2500);
+    }, 5500);
   }
 
   // Externally settable — used by restart handler to reset mute state
