@@ -38,6 +38,10 @@ export function initSessionScreen(onStop: () => void): { reset: () => void } {
     pauseButton.textContent = 'Pause';
     pauseButton.setAttribute('aria-label', 'Pause session');
     timerDisplay.style.opacity = '1';
+    // Restore elements that showAffirmation() hides — must be cleared for next session
+    timerDisplay.style.display = '';
+    pauseButton.style.display  = '';
+    stopButton.style.display   = '';
   }
 
   return { reset };
