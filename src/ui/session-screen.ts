@@ -2,10 +2,11 @@
 import { bus } from '../event-bus.js';
 import { formatTime } from '../utils/format.js';
 
-export function initSessionScreen(onStop: () => void): { reset: () => void } {
+export function initSessionScreen(onStop: () => void, onRestart: () => void): { reset: () => void } {
   const timerDisplay = document.querySelector<HTMLElement>('#timer-display')!;
   const stopButton = document.querySelector<HTMLButtonElement>('#stop-button')!;
   const pauseButton = document.querySelector<HTMLButtonElement>('#pause-button')!;
+  const restartButton = document.querySelector<HTMLButtonElement>('#restart-button')!;
 
   let isPaused = false;
 
@@ -32,6 +33,7 @@ export function initSessionScreen(onStop: () => void): { reset: () => void } {
   });
 
   stopButton.addEventListener('click', onStop);
+  restartButton.addEventListener('click', onRestart);
 
   function reset(): void {
     isPaused = false;
@@ -39,9 +41,10 @@ export function initSessionScreen(onStop: () => void): { reset: () => void } {
     pauseButton.setAttribute('aria-label', 'Pause session');
     timerDisplay.style.opacity = '1';
     // Restore elements that showAffirmation() hides — must be cleared for next session
-    timerDisplay.style.display = '';
-    pauseButton.style.display  = '';
-    stopButton.style.display   = '';
+    timerDisplay.style.display  = '';
+    pauseButton.style.display   = '';
+    restartButton.style.display = '';
+    stopButton.style.display    = '';
   }
 
   return { reset };

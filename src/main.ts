@@ -113,20 +113,39 @@ initSetupScreen(async (durationMs: number, sceneName: SceneName) => {
   transitionToSession();
 });
 
-// Wire session screen — stop button handler
-const { reset: resetSessionScreen } = initSessionScreen(async () => {
-  state.sessionActive = false;
-  state.sessionPaused = false;
-  chimeScheduled = false;
-  timer.stop();
-  bus.emit('session:stop', {});
-  const stopCtx = getAudioContext();
-  if (stopCtx) stopAmbient(stopCtx);
-  await releaseWakeLock();
-  showBgStars();
-  // Reset session screen state only after it's hidden — prevents buttons flashing
-  transitionToSetup(() => resetSessionScreen());
-});
+// Wire session screen — stop and restart handlers
+const { reset: resetSessionScreen } = initSessionScreen(
+  // onStop
+  async () => {
+    state.sessionActive = false;
+    state.sessionPaused = false;
+    chimeScheduled = false;
+    timer.stop();
+    bus.emit('session:stop', {});
+    const stopCtx = getAudioContext();
+    if (stopCtx) stopAmbient(stopCtx);
+    await releaseWakeLock();
+    showBgStars();
+    // Reset session screen state only after it's hidden — prevents buttons flashing
+    transitionToSetup(() => resetSessionScreen());
+  },
+  // onRestart
+  async () => {
+    // If paused, resume the audio context before stopping ambient
+    if (state.sessionPaused) {
+      state.sessionPaused = false;
+      await getAudioContext()?.resume();
+    }
+    chimeScheduled = false;
+    timer.stop();
+    const restartCtx = getAudioContext();
+    if (restartCtx) stopAmbient(restartCtx);
+    resetSessionScreen(); // resets pause button label and opacity
+    timer.start(state.sessionDurationMs);
+    bus.emit('session:start', { durationMs: state.sessionDurationMs, sceneName: state.sceneName });
+    if (restartCtx) await startAmbient(restartCtx, state.sceneName);
+  },
+);
 
 // Gong pre-start — begins fading in 1 s before the timer hits zero.
 // A flag prevents it firing more than once per session.
