@@ -40,13 +40,17 @@ export async function initAudio(): Promise<void> {
   try {
     const relay = document.createElement('audio');
     relay.setAttribute('playsinline', '');
+    relay.volume = 0; // completely silent at the HTML level — no audible output
     const osc  = audioCtx.createOscillator();
+    osc.frequency.value = 1; // 1 Hz — sub-sonic, inaudible even if gain leaked
     const gain = audioCtx.createGain();
-    gain.gain.value = 0.001; // inaudible but non-zero so iOS counts it as active audio
+    gain.gain.value = 0.001;
     const streamDest = audioCtx.createMediaStreamDestination();
     osc.connect(gain);
     gain.connect(streamDest);
     osc.start();
+    // Stop the relay oscillator after 2 s — enough for iOS session upgrade, not forever
+    setTimeout(() => { try { osc.stop(); } catch { /* already stopped */ } }, 2000);
     relay.srcObject = streamDest.stream;
     relay.play().catch(() => {});
   } catch { /* MediaStreamDestination unavailable — silent-mode fix skipped */ }

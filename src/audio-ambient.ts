@@ -6,7 +6,7 @@ import type { SceneName } from './scenes/scene.interface.js';
 
 const BUFFER_DURATION_S = 90;    // 90 s makes looping imperceptible
 const FADE_IN_S = 2.0;
-const FADE_OUT_S = 1.5;
+const FADE_OUT_S = 0.4; // short fade for manual stop — music shouldn't linger on home screen
 const PEAK_GAIN = 0.55;          // below chime's 0.72 — ambient must not mask the chime
 const LOOP_FADE_SAMPLES = 512;   // ~11.6 ms cosine fade at loop boundary — eliminates click
 
