@@ -55,8 +55,6 @@ export function initSetupScreen(onStart: (durationMs: number, sceneName: SceneNa
   const segHover = container.querySelector<HTMLElement>('#seg-hover')!;
   const segControl = container.querySelector<HTMLElement>('#seg-control')!;
 
-  const EASE = 'cubic-bezier(0,0,0.2,1)'; // pure ease-out: starts at full speed, lands softly
-
   // Move an indicator element to sit exactly under the given button
   function syncIndicator(el: HTMLElement, btn: HTMLButtonElement): void {
     el.style.width     = btn.offsetWidth + 'px';
