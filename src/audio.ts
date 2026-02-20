@@ -33,33 +33,36 @@ export async function initAudio(): Promise<void> {
   silentSrc.connect(audioCtx.destination);
   silentSrc.start(0);
 
-  // iOS silent-mode fix: Web Audio defaults to the "ambient" AVAudioSession category,
-  // which is muted by the ringer switch. Routing a stream through an HTMLAudioElement
-  // requests the "playback" category instead — which follows volume buttons only.
-  // Must happen synchronously (before any await) to land inside the gesture window.
+  // iOS silent-mode fix: Web Audio defaults to AVAudioSessionCategoryAmbient,
+  // which the hardware ringer switch mutes. Playing a real audio file through
+  // an HTMLAudioElement upgrades the session to AVAudioSessionCategoryPlayback,
+  // which only responds to the volume buttons — bypassing the ringer.
+  //
+  // The MediaStreamDestination approach was unreliable (iOS may not upgrade the
+  // session for a locally-generated Web Audio stream). A tiny looping WAV blob
+  // played at volume=0 is the proven-reliable technique.
+  //
+  // Must happen synchronously before any await to stay in the gesture window.
   try {
+    // Build a minimal 1-sample silent WAV (45 bytes) as a Blob URL.
+    const sr = 8000;
+    const wav = new ArrayBuffer(45);
+    const v   = new DataView(wav);
+    const str = (off: number, s: string) => { for (let i = 0; i < s.length; i++) v.setUint8(off + i, s.charCodeAt(i)); };
+    str(0, 'RIFF'); v.setUint32(4, 37,   true);
+    str(8, 'WAVE'); str(12, 'fmt ');
+    v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, sr, true); v.setUint32(28, sr, true);
+    v.setUint16(32, 1,  true); v.setUint16(34, 8, true);
+    str(36, 'data'); v.setUint32(40, 1, true); v.setUint8(44, 128); // 128 = silence (unsigned 8-bit PCM)
+    const url   = URL.createObjectURL(new Blob([wav], { type: 'audio/wav' }));
     const relay = document.createElement('audio');
     relay.setAttribute('playsinline', '');
-    relay.volume = 0; // completely silent at the HTML level — no audible output
-    const osc  = audioCtx.createOscillator();
-    osc.frequency.value = 1; // 1 Hz — sub-sonic, inaudible even if gain leaked
-    const gain = audioCtx.createGain();
-    gain.gain.value = 0.001;
-    const streamDest = audioCtx.createMediaStreamDestination();
-    osc.connect(gain);
-    gain.connect(streamDest);
-    osc.start();
-    // Stop oscillator after 2 s — iOS session category is locked in by then.
-    // The relay element must stay alive (keep playing the stream) so iOS doesn't
-    // revert to AVAudioSessionCategoryAmbient (which the ringer switch mutes).
-    // relay.muted=true + volume=0 means it produces no audible output.
-    setTimeout(() => { try { osc.stop(); } catch { /* already stopped */ } }, 2000);
-    // Do NOT set relay.muted=true — iOS treats a muted element as not needing
-    // audio output and skips the AVAudioSessionCategoryPlayback upgrade.
-    // volume=0 keeps it silent while still signalling active playback to iOS.
-    relay.srcObject = streamDest.stream;
+    relay.loop   = true;
+    relay.volume = 0; // silent — category upgrade happens regardless of volume
+    relay.src    = url;
     relay.play().catch(() => {});
-  } catch { /* MediaStreamDestination unavailable — silent-mode fix skipped */ }
+  } catch { /* skip if Blob/URL API unavailable */ }
 
   await audioCtx.resume();
 }
