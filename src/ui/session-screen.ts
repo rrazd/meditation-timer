@@ -56,8 +56,8 @@ export function initSessionScreen(
   function applySpeakerState(): void {
     speakerOnIcon.style.display    = isMuted ? 'none' : '';
     speakerMutedIcon.style.display = isMuted ? '' : 'none';
-    speakerButton.style.background = isMuted ? 'rgba(55,30,120,0.22)' : 'rgba(90,55,185,0.32)';
-    speakerButton.style.color      = isMuted ? 'rgba(160,130,220,0.40)' : 'rgba(205,175,255,0.82)';
+    speakerButton.style.background = 'rgba(90,55,185,0.32)';
+    speakerButton.style.color      = 'rgba(205,175,255,0.82)';
   }
 
   function showToast(message: string): void {
