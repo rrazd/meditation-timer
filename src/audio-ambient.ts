@@ -15,6 +15,8 @@ let activeSource: AudioBufferSourceNode | null = null;
 let activeMasterGain: GainNode | null = null;
 // Incremented by stopAmbient; lets startAmbient detect mid-build cancellation.
 let sessionGeneration = 0;
+// Mute flag — set by setAmbientMuted, reset by stopAmbient for next session.
+let ambientMuted = false;
 
 // Cache buffers across sessions — buffer content is equivalent each regeneration,
 // but caching avoids ~10–30 ms main-thread work on session restart.
@@ -42,7 +44,7 @@ export async function startAmbient(ctx: AudioContext, sceneName: SceneName): Pro
   masterGain.connect(ctx.destination);
   const now = ctx.currentTime;
   masterGain.gain.setValueAtTime(0, now);
-  masterGain.gain.linearRampToValueAtTime(PEAK_GAIN, now + FADE_IN_S);
+  masterGain.gain.linearRampToValueAtTime(ambientMuted ? 0 : PEAK_GAIN, now + FADE_IN_S);
 
   const { input, output } = createFilterChain(ctx, sceneName);
 
@@ -66,6 +68,22 @@ export async function startAmbient(ctx: AudioContext, sceneName: SceneName): Pro
 }
 
 /**
+ * Mute or unmute ambient audio with a short ramp.
+ * Safe to call before startAmbient — the flag is applied when the session starts.
+ */
+export function setAmbientMuted(ctx: AudioContext, muted: boolean): void {
+  ambientMuted = muted;
+  if (!activeMasterGain) return;
+  const now = ctx.currentTime;
+  try { activeMasterGain.gain.cancelAndHoldAtTime(now); }
+  catch {
+    activeMasterGain.gain.cancelScheduledValues(now);
+    activeMasterGain.gain.setValueAtTime(activeMasterGain.gain.value, now);
+  }
+  activeMasterGain.gain.linearRampToValueAtTime(muted ? 0 : PEAK_GAIN, now + 0.3);
+}
+
+/**
  * Fade out and stop the current ambient session.
  * fadeDurationS defaults to FADE_OUT_S (1.5 s) for normal stops.
  * Pass a longer value (e.g. 8 s) for the end-of-session crossfade with the OM.
@@ -73,6 +91,7 @@ export async function startAmbient(ctx: AudioContext, sceneName: SceneName): Pro
  */
 export function stopAmbient(ctx: AudioContext, fadeDurationS: number = FADE_OUT_S): void {
   sessionGeneration++; // invalidate any startAmbient still awaiting its buffer/resume
+  ambientMuted = false; // reset for next session
   // Capture references before nulling — prevents source node leak if called twice
   const src = activeSource;
   const gain = activeMasterGain;

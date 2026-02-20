@@ -10,7 +10,7 @@ import { initSessionScreen } from './ui/session-screen.js';
 import { transitionToSession, transitionToSetup } from './ui/transitions.js';
 import { acquireWakeLock, releaseWakeLock } from './utils/wake-lock.js';
 import { initAudio, playChime, stopChime, getAudioContext } from './audio.js';
-import { startAmbient, stopAmbient } from './audio-ambient.js';
+import { startAmbient, stopAmbient, setAmbientMuted } from './audio-ambient.js';
 import { initSceneController } from './scenes/scene-controller.js';
 import { initBgStars, hideBgStars, showBgStars } from './ui/bg-stars.js';
 import type { SceneName } from './scenes/scene.interface.js';
@@ -113,8 +113,8 @@ initSetupScreen(async (durationMs: number, sceneName: SceneName) => {
   transitionToSession();
 });
 
-// Wire session screen — stop and restart handlers
-const { reset: resetSessionScreen } = initSessionScreen(
+// Wire session screen — stop, restart, and mute handlers
+const { reset: resetSessionScreen, setMuted: setSpeakerMuted } = initSessionScreen(
   // onStop
   async () => {
     state.sessionActive = false;
@@ -140,10 +140,16 @@ const { reset: resetSessionScreen } = initSessionScreen(
     timer.stop();
     const restartCtx = getAudioContext();
     if (restartCtx) stopAmbient(restartCtx);
+    setSpeakerMuted(false); // reset mute on restart
     resetSessionScreen(); // resets pause button label and opacity
     timer.start(state.sessionDurationMs);
     bus.emit('session:start', { durationMs: state.sessionDurationMs, sceneName: state.sceneName });
     if (restartCtx) await startAmbient(restartCtx, state.sceneName);
+  },
+  // onToggleMute
+  (muted: boolean) => {
+    const ctx = getAudioContext();
+    if (ctx) setAmbientMuted(ctx, muted);
   },
 );
 
