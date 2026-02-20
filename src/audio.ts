@@ -82,14 +82,19 @@ export function getAudioContext(): AudioContext | null {
  */
 export function playChime(): Promise<void> {
   return new Promise((resolve) => {
-    if (!audioCtx) {
-      resolve();
-      return;
-    }
-    if (ENDING_SOUND === 'om') {
-      playOm(audioCtx, resolve);
+    if (!audioCtx) { resolve(); return; }
+    // iOS may auto-suspend the AudioContext when no nodes are connected to the
+    // destination (e.g. when ambient is muted and masterGain was disconnected).
+    // Resume before starting oscillators so they actually produce output.
+    const ctx = audioCtx;
+    const start = () => {
+      if (ENDING_SOUND === 'om') playOm(ctx, resolve);
+      else playGong(ctx, resolve);
+    };
+    if (ctx.state === 'running') {
+      start();
     } else {
-      playGong(audioCtx, resolve);
+      ctx.resume().then(start).catch(start);
     }
   });
 }
