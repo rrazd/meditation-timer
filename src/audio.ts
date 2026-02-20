@@ -22,14 +22,19 @@ let activeChimeOscillators: OscillatorNode[] = [];
  */
 export async function initAudio(): Promise<void> {
   if (audioCtx !== null) {
-    // iOS Safari suspends the context when the tab is backgrounded — resume it.
     if (audioCtx.state === 'suspended') await audioCtx.resume();
     return;
   }
   audioCtx = new AudioContext();
-  // iOS Safari creates AudioContext in 'suspended' state even inside a user gesture.
-  // Calling resume() here, while still in the gesture handler, permanently unlocks audio.
-  if (audioCtx.state === 'suspended') await audioCtx.resume();
+  // iOS WebKit (Safari + Chrome) requires audio to start within the synchronous
+  // part of the gesture handler. Any `await` before start() breaks the gesture window.
+  // Start the silent buffer FIRST (synchronous), then await resume().
+  const silentBuf = audioCtx.createBuffer(1, 1, audioCtx.sampleRate);
+  const silentSrc = audioCtx.createBufferSource();
+  silentSrc.buffer = silentBuf;
+  silentSrc.connect(audioCtx.destination);
+  silentSrc.start(0); // Must be before any await — stays within iOS gesture window
+  await audioCtx.resume();
 }
 
 /**

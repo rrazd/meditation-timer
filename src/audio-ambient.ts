@@ -47,6 +47,9 @@ export async function startAmbient(ctx: AudioContext, sceneName: SceneName): Pro
   source.loopEnd = buffer.duration;
   source.connect(input);
   output.connect(masterGain);
+  // On iOS the context can drift back to suspended during the async buffer build.
+  // Re-resume before start() to ensure playback actually begins.
+  if (ctx.state !== 'running') await ctx.resume();
   source.start();
 
   activeSource = source;
