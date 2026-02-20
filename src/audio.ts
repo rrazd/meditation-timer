@@ -26,14 +26,31 @@ export async function initAudio(): Promise<void> {
     return;
   }
   audioCtx = new AudioContext();
-  // iOS WebKit (Safari + Chrome) requires audio to start within the synchronous
-  // part of the gesture handler. Any `await` before start() breaks the gesture window.
-  // Start the silent buffer FIRST (synchronous), then await resume().
+  // iOS WebKit: start audio synchronously BEFORE any await to stay in gesture window.
   const silentBuf = audioCtx.createBuffer(1, 1, audioCtx.sampleRate);
   const silentSrc = audioCtx.createBufferSource();
   silentSrc.buffer = silentBuf;
   silentSrc.connect(audioCtx.destination);
-  silentSrc.start(0); // Must be before any await — stays within iOS gesture window
+  silentSrc.start(0);
+
+  // iOS silent-mode fix: Web Audio defaults to the "ambient" AVAudioSession category,
+  // which is muted by the ringer switch. Routing a stream through an HTMLAudioElement
+  // requests the "playback" category instead — which follows volume buttons only.
+  // Must happen synchronously (before any await) to land inside the gesture window.
+  try {
+    const relay = document.createElement('audio');
+    relay.setAttribute('playsinline', '');
+    const osc  = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    gain.gain.value = 0.001; // inaudible but non-zero so iOS counts it as active audio
+    const streamDest = audioCtx.createMediaStreamDestination();
+    osc.connect(gain);
+    gain.connect(streamDest);
+    osc.start();
+    relay.srcObject = streamDest.stream;
+    relay.play().catch(() => {});
+  } catch { /* MediaStreamDestination unavailable — silent-mode fix skipped */ }
+
   await audioCtx.resume();
 }
 

@@ -68,14 +68,16 @@
 /* ── Prevent horizontal scroll ───────────────────────────────────────────── */
 html, body { overflow-x: hidden; }
 
-/* ── Mobile responsive layout ───────────────────────────────────────────── */
+/* ── Mobile responsive layout (narrow screens) ───────────────────────────── */
 @media (max-width: 500px) {
-  /* Card: shrink padding and constrain width to viewport */
+  /* Card: shrink padding, constrain max width, let natural width center it */
   #setup-card {
     padding: 2rem 1.25rem !important;
-    width: calc(100vw - 2rem) !important;
+    max-width: calc(100vw - 2rem) !important;
     min-width: 0 !important;
     box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   /* Title: reduce size so it doesn't overflow */
@@ -93,6 +95,21 @@ html, body { overflow-x: hidden; }
   [data-preset] {
     padding: 0.38rem 0.65rem !important;
     font-size: 11.5px !important;
+  }
+}
+
+/* ── Responsive vertical padding (short screens) ─────────────────────────── */
+/* Gradually remove top/bottom spacing as height shrinks so card stays visible */
+@media (max-height: 750px) {
+  #setup-screen {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+}
+@media (max-height: 650px) {
+  #setup-screen {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
 }
 
