@@ -129,6 +129,22 @@ html, body { overflow-x: hidden; }
   animation: cardSmokeBreathe 14s ease-in-out infinite;
 }
 
+/* Speaker button — gentle float with shadow breathing in unison */
+@keyframes speakerFloat {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow: 0 3px 10px rgba(110,65,220,0.22);
+  }
+  50% {
+    transform: translateY(-5px);
+    box-shadow: 0 9px 22px rgba(110,65,220,0.42);
+  }
+}
+#speaker-button {
+  animation: speakerFloat 3.4s ease-in-out infinite;
+  will-change: transform;
+}
+
 /* Start button — slow pulsing glow, draws the eye without demanding it */
 @keyframes startButtonPulse {
   0%, 100% { box-shadow: 0 4px 18px rgba(58,90,210,0.24); }
