@@ -131,8 +131,8 @@ html, body { overflow-x: hidden; }
 
 /* Speaker button — slow pulsing glow */
 @keyframes speakerGlow {
-  0%, 100% { box-shadow: 0 0 8px 2px rgba(110,65,220,0.18); }
-  50%       { box-shadow: 0 0 18px 6px rgba(120,75,235,0.38); }
+  0%, 100% { box-shadow: 0 0 10px 3px rgba(140,100,255,0.28); }
+  50%       { box-shadow: 0 0 22px 8px rgba(155,115,255,0.50); }
 }
 #speaker-button {
   animation: speakerGlow 3.4s ease-in-out infinite;
