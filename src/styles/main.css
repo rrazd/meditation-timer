@@ -129,13 +129,13 @@ html, body { overflow-x: hidden; }
   animation: cardSmokeBreathe 14s ease-in-out infinite;
 }
 
-/* Speaker button — slow pulsing glow */
+/* Speaker button — very subtle breathing glow */
 @keyframes speakerGlow {
-  0%, 100% { box-shadow: 0 0 10px 3px rgba(140,100,255,0.28); }
-  50%       { box-shadow: 0 0 22px 8px rgba(155,115,255,0.50); }
+  0%, 100% { box-shadow: 0 0 6px 1px rgba(140,100,255,0.10); }
+  50%       { box-shadow: 0 0 12px 3px rgba(155,115,255,0.22); }
 }
 #speaker-button {
-  animation: speakerGlow 3.4s ease-in-out infinite;
+  animation: speakerGlow 4.5s ease-in-out infinite;
 }
 
 /* Start button — slow pulsing glow, draws the eye without demanding it */

@@ -89,9 +89,15 @@ export function setAmbientMuted(ctx: AudioContext, muted: boolean): void {
  * Pass a longer value (e.g. 8 s) for the end-of-session crossfade with the OM.
  * Safe to call when nothing is playing (no-op).
  */
+/** Reset the ambient mute flag for a new session (call on stop/complete, NOT on restart). */
+export function clearAmbientMute(): void {
+  ambientMuted = false;
+}
+
 export function stopAmbient(ctx: AudioContext, fadeDurationS: number = FADE_OUT_S): void {
   sessionGeneration++; // invalidate any startAmbient still awaiting its buffer/resume
-  ambientMuted = false; // reset for next session
+  // ambientMuted is intentionally NOT reset here — callers that want to reset it
+  // (stop/complete flows) call clearAmbientMute() explicitly. Restart preserves it.
   // Capture references before nulling — prevents source node leak if called twice
   const src = activeSource;
   const gain = activeMasterGain;

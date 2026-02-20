@@ -50,14 +50,14 @@ export function initSessionScreen(
     speakerButton.dataset['muted'] = isMuted ? '1' : '0';
     onToggleMute(isMuted);
     applySpeakerState();
-    if (isMuted) showToast('Ambiance muted. The end-of-meditation signal will still sound.');
+    if (isMuted) showToast('End of meditation signal will still sound.');
   });
 
   function applySpeakerState(): void {
     speakerOnIcon.style.display    = isMuted ? 'none' : '';
     speakerMutedIcon.style.display = isMuted ? '' : 'none';
     speakerButton.style.background = 'rgba(100,65,200,0.42)';
-    speakerButton.style.color      = 'rgba(245,238,255,0.92)';
+    speakerButton.style.color      = 'rgba(140,168,255,0.88)';
   }
 
   function showToast(message: string): void {
@@ -97,8 +97,6 @@ export function initSessionScreen(
     timerDisplay.style.display  = '';
     pauseButton.style.display   = '';
     stopButton.style.display    = '';
-    // Reset speaker
-    setMuted(false);
   }
 
   return { reset, setMuted };

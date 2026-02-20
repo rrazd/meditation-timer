@@ -57,12 +57,14 @@ export function initSceneController(canvas: HTMLCanvasElement): void {
   }
 
   function startScene(sceneName: SceneName): void {
+    const wasVisible = canvas.style.display !== 'none';
     stopScene(); // cancel any previous rAF loop and destroy previous scene
     activeScene = SCENE_MAP[sceneName]?.() ?? SCENE_MAP.rain();
     activeScene.init(canvas, options);
-    // Canvas is revealed by transitionToSession() — not here — to prevent
-    // the scene bleeding through the setup card's backdrop-filter glass effect
-    // during the async gap between session:start and the screen transition.
+    // Canvas is revealed by transitionToSession() on first session start — not here —
+    // to prevent the scene bleeding through the setup card's backdrop-filter glass effect.
+    // On restart the canvas was already visible, so restore it immediately.
+    if (wasVisible) canvas.style.display = 'block';
     lastFrameTime = null; // reset so first frame dt is 0
     rafId = requestAnimationFrame(loop);
   }

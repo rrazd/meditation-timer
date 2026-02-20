@@ -49,10 +49,16 @@ export async function initAudio(): Promise<void> {
     osc.connect(gain);
     gain.connect(streamDest);
     osc.start();
-    // Stop the relay oscillator after 2 s — enough for iOS session upgrade, not forever
-    setTimeout(() => { try { osc.stop(); } catch { /* already stopped */ } }, 2000);
+    relay.muted  = true; // belt-and-suspenders: muted + volume=0
     relay.srcObject = streamDest.stream;
     relay.play().catch(() => {});
+    // Tear down after 2 s — iOS session category is locked in by then.
+    // Leaving a live MediaStream element running causes noise artifacts on iOS
+    // when the main Web Audio output is at gain=0 (mute state).
+    setTimeout(() => {
+      try { osc.stop(); } catch { /* already stopped */ }
+      try { relay.pause(); relay.srcObject = null; } catch { /* ignore */ }
+    }, 2000);
   } catch { /* MediaStreamDestination unavailable — silent-mode fix skipped */ }
 
   await audioCtx.resume();

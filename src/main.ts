@@ -10,7 +10,7 @@ import { initSessionScreen } from './ui/session-screen.js';
 import { transitionToSession, transitionToSetup } from './ui/transitions.js';
 import { acquireWakeLock, releaseWakeLock } from './utils/wake-lock.js';
 import { initAudio, playChime, stopChime, getAudioContext } from './audio.js';
-import { startAmbient, stopAmbient, setAmbientMuted } from './audio-ambient.js';
+import { startAmbient, stopAmbient, setAmbientMuted, clearAmbientMute } from './audio-ambient.js';
 import { initSceneController } from './scenes/scene-controller.js';
 import { initBgStars, hideBgStars, showBgStars } from './ui/bg-stars.js';
 import type { SceneName } from './scenes/scene.interface.js';
@@ -126,6 +126,8 @@ const { reset: resetSessionScreen, setMuted: setSpeakerMuted } = initSessionScre
     if (stopCtx) stopAmbient(stopCtx);
     await releaseWakeLock();
     showBgStars();
+    clearAmbientMute();
+    setSpeakerMuted(false);
     // Reset session screen state only after it's hidden — prevents buttons flashing
     transitionToSetup(() => resetSessionScreen());
   },
@@ -140,7 +142,6 @@ const { reset: resetSessionScreen, setMuted: setSpeakerMuted } = initSessionScre
     timer.stop();
     const restartCtx = getAudioContext();
     if (restartCtx) stopAmbient(restartCtx);
-    setSpeakerMuted(false); // reset mute on restart
     resetSessionScreen(); // resets pause button label and opacity
     timer.start(state.sessionDurationMs);
     bus.emit('session:start', { durationMs: state.sessionDurationMs, sceneName: state.sceneName });
@@ -191,6 +192,8 @@ bus.on('session:complete', async () => {
   // Fully stop and hide the scene canvas now that the user has dismissed
   bus.emit('session:stop', {});
   showBgStars();
+  clearAmbientMute();
+  setSpeakerMuted(false);
   transitionToSetup(() => resetSessionScreen());
 });
 
