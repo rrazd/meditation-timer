@@ -98,6 +98,13 @@ html, body { overflow-x: hidden; }
   }
 }
 
+/* ── Prevent input zoom on iOS (font-size < 16px triggers auto-zoom) ────── */
+@media (max-width: 768px) {
+  .float-input {
+    font-size: 16px !important;
+  }
+}
+
 /* ── Responsive vertical padding (short screens) ─────────────────────────── */
 /* Gradually remove top/bottom spacing as height shrinks so card stays visible */
 @media (max-height: 750px) {
